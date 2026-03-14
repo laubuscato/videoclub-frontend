@@ -1,0 +1,134 @@
+.home {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 80px 1fr;
+
+  min-height: 100vh;
+
+  background: #1d1d1d;
+  color: white;
+  font-family: 'Nunito', sans-serif;
+}
+
+
+/* SIDEBAR */
+
+.sidebar {
+  grid-row: 1 / 3;
+
+  background: #2c2c2c;
+
+  padding: 30px;
+
+  border-radius: 0 20px 20px 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* TITULO VIDEOCLUB */
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+
+  margin-bottom: 40px;
+}
+
+
+/* MENU */
+
+.menu-item {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+
+.genres {
+  list-style: none;
+  padding: 0;
+}
+
+.genres li {
+  margin: 8px 0;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.genres li:hover {
+  opacity: 1;
+  color: #f5a623;
+}
+
+
+/* HEADER */
+
+.header {
+  grid-column: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 40px;
+}
+
+
+.search {
+  width: 300px;
+
+  padding: 10px 16px;
+
+  border-radius: 25px;
+  border: 2px solid #f5a623;
+
+  background: transparent;
+
+  color: white;
+}
+
+.search::placeholder {
+  color: #aaa;
+}
+
+
+.header-actions span {
+  margin-left: 20px;
+
+  color: #f5a623;
+
+  cursor: pointer;
+}
+
+
+/* CONTENT */
+
+.content {
+  padding: 30px 40px;
+}
+
+
+.section-title {
+  margin-bottom: 25px;
+}
+
+
+/* MOVIES GRID */
+
+.movies {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 25px;
+}
+
+
+.movie {
+  height: 140px;
+
+  border-radius: 12px;
+
+  background: #333;
+}
