@@ -54,7 +54,7 @@ function Home() {
                 <h2 className="section-title">LO MÁS VENDIDO</h2>
 
                 <div className="movies">
-                    {movies.slice(0, 8).map((movie)=> (
+                    {movies.slice(0, 8).map((movie)=> (  //coge las primeras 8 del array
                         <div className="movie" key={movie.id}>
                             <img src={movie.posterUrl} alt={movie.title} className="movie-poster" />
                             <h3>{movie.title}</h3>

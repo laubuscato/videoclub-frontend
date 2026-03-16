@@ -2,48 +2,33 @@
   display: grid;
   grid-template-columns: 220px 1fr;
   grid-template-rows: 80px 1fr;
-
   min-height: 100vh;
-
   background: #1d1d1d;
   color: white;
   font-family: 'Nunito', sans-serif;
 }
 
-
 /* SIDEBAR */
 
 .sidebar {
   grid-row: 1 / 3;
-
   background: #2c2c2c;
-
   padding: 30px;
-
   border-radius: 0 20px 20px 0;
-
   display: flex;
   flex-direction: column;
 }
 
-
-/* TITULO VIDEOCLUB */
-
 .logo {
   font-size: 28px;
   font-weight: bold;
-
   margin-bottom: 40px;
 }
-
-
-/* MENU */
 
 .menu-item {
   margin-bottom: 20px;
   font-weight: bold;
 }
-
 
 .genres {
   list-style: none;
@@ -61,30 +46,22 @@
   color: #f5a623;
 }
 
-
 /* HEADER */
 
 .header {
   grid-column: 2;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 20px 40px;
 }
 
-
 .search {
   width: 300px;
-
   padding: 10px 16px;
-
   border-radius: 25px;
   border: 2px solid #f5a623;
-
   background: transparent;
-
   color: white;
 }
 
@@ -92,15 +69,11 @@
   color: #aaa;
 }
 
-
 .header-actions span {
   margin-left: 20px;
-
   color: #f5a623;
-
   cursor: pointer;
 }
-
 
 /* CONTENT */
 
@@ -108,27 +81,51 @@
   padding: 30px 40px;
 }
 
-
 .section-title {
   margin-bottom: 25px;
 }
-
 
 /* MOVIES GRID */
 
 .movies {
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
-
   gap: 25px;
 }
 
-
 .movie {
-  height: 140px;
-
-  border-radius: 12px;
-
   background: #333;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.movie-poster {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.movie h3 {
+  font-size: 18px;
+  margin: 0;
+  color: #fff;
+}
+
+.movie p {
+  margin: 0;
+  color: #cfcfcf;
+  font-size: 14px;
+  line-height: 1.4;
 }
