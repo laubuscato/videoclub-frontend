@@ -1,4 +1,6 @@
 import "./home.css";
+import { movies } from "../data/movies";
+
 
 function Home() {
     return (
@@ -52,17 +54,14 @@ function Home() {
                 <h2 className="section-title">LO MÁS VENDIDO</h2>
 
                 <div className="movies">
-
-                    <div className="movie"></div>
-                    <div className="movie"></div>
-                    <div className="movie"></div>
-                    <div className="movie"></div>
-
-                    <div className="movie"></div>
-                    <div className="movie"></div>
-                    <div className="movie"></div>
-                    <div className="movie"></div>
-
+                    {movies.slice(0, 8).map((movie)=> (
+                        <div className="movie" key={movie.id}>
+                            <img src={movie.posterUrl} alt={movie.title} className="movie-poster" />
+                            <h3>{movie.title}</h3>
+                            <p>{movie.year}</p>
+                            <p>{movie.genres.join(", ")}</p>
+                        </div>
+                    ))}
                 </div>
 
             </main>
