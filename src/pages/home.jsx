@@ -1,8 +1,12 @@
 import "./home.css";
 import { movies } from "../data/movies";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+
+    const navigate = useNavigate();
+
     return (
         <div className="home">
 
@@ -46,7 +50,7 @@ function Home() {
 
                 <div className="header-actions">
 
-                    <span className="account">
+                    <span className="account" onClick={() => navigate("/")}>
                         <FiUser className="account-icon" />
                         Mi cuenta
                     </span>
