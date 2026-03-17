@@ -1,3 +1,5 @@
+/* contenedor principal */
+
 .home {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -11,39 +13,39 @@
 }
 
 
-/* SIDEBAR */
+/* sidebar */
 
 .sidebar {
   grid-row: 1 / 3;
 
-  background: #2c2c2c;
+  display: flex;
+  flex-direction: column;
 
   padding: 30px;
 
+  background: #2c2c2c;
   border-radius: 0 20px 20px 0;
-
-  display: flex;
-  flex-direction: column;
 }
 
 
-/* TITULO VIDEOCLUB */
+/* título VIDEOCLUB */
 
 .logo {
-  font-size: 28px;
-  font-weight: bold;
-
   margin-bottom: 40px;
+  margin-top: -10px;
+  margin-left: -14px;
+
+  font-size: 32px;
+  font-weight: bold;
 }
 
 
-/* MENU */
+/* menú lateral */
 
 .menu-item {
   margin-bottom: 20px;
   font-weight: bold;
 }
-
 
 .genres {
   list-style: none;
@@ -52,6 +54,7 @@
 
 .genres li {
   margin: 8px 0;
+
   opacity: 0.8;
   cursor: pointer;
 }
@@ -62,7 +65,7 @@
 }
 
 
-/* HEADER */
+/* header */
 
 .header {
   grid-column: 2;
@@ -75,60 +78,123 @@
 }
 
 
+/* buscador */
+
+.search-container {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
 .search {
   width: 300px;
+  padding: 10px 16px 10px 40px;
 
-  padding: 10px 16px;
+  font-size: 16px;
 
   border-radius: 25px;
   border: 2px solid #f5a623;
 
-  background: transparent;
-
+  background: #f5a52317;
   color: white;
 }
 
 .search::placeholder {
-  color: #aaa;
+  color: #f5a623;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+
+  font-size: 16px;
+  color: #f5a623;
+}
+
+.search:focus {
+  outline: none;
+  border: 2px solid #f5a623;
+  box-shadow: 0 0 8px rgba(245, 166, 35, 0.5);
 }
 
 
+/* header actions */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
 .header-actions span {
-  margin-left: 20px;
-
   color: #f5a623;
-
   cursor: pointer;
 }
 
+.header-actions span:hover {
+  opacity: 0.8;
+}
 
-/* CONTENT */
+
+/* cuenta y carrito */
+
+.account,
+.cart {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #f5a623;
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+}
+
+.account-icon,
+.cart-icon {
+  font-size: 22px;
+  padding-right: 2px;
+}
+
+
+/* efecto click */
+
+.account:active,
+.cart:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.account:focus,
+.cart:focus {
+  outline: none;
+}
+
+
+/* contenido */
 
 .content {
   padding: 30px 40px;
 }
-
 
 .section-title {
   margin-bottom: 25px;
 }
 
 
-/* MOVIES GRID */
+/* grid de películas */
 
 .movies {
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
 
   gap: 25px;
 }
 
-
 .movie {
   height: 140px;
 
-  border-radius: 12px;
-
   background: #333;
+  border-radius: 12px;
 }

@@ -1,4 +1,7 @@
 import "./home.css";
+import { FiSearch } from "react-icons/fi";
+import { FiShoppingCart } from "react-icons/fi";
+import { FiUser} from "react-icons/fi";
 
 function Home() {
     return (
@@ -34,14 +37,25 @@ function Home() {
 
             <header className="header">
 
-                <input
-                    className="search"
-                    placeholder="Search"
-                />
+                <div className="search-container">
+                    <FiSearch className="search-icon" />
+
+                    <input
+                        className="search"
+                        placeholder="Search"
+                    />
+                </div>
 
                 <div className="header-actions">
-                    <span>Mi cuenta</span>
-                    <span>Mi cesta</span>
+                    <span className="account">
+                        <FiUser className="account-icon" />
+                        Mi cuenta
+                        </span>
+
+                    <span className="cart">
+                        <FiShoppingCart className="cart-icon" />
+                        Mi cesta
+                        </span>
                 </div>
 
             </header>
