@@ -1,6 +1,6 @@
 import "./home.css";
 import { movies } from "../data/movies";
-
+import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 
 function Home() {
     return (
@@ -33,7 +33,6 @@ function Home() {
 
             </aside>
 
-
             <header className="header">
 
                 <div className="search-container">
@@ -46,28 +45,33 @@ function Home() {
                 </div>
 
                 <div className="header-actions">
+
                     <span className="account">
                         <FiUser className="account-icon" />
                         Mi cuenta
-                        </span>
+                    </span>
 
                     <span className="cart">
                         <FiShoppingCart className="cart-icon" />
                         Mi cesta
-                        </span>
+                    </span>
+
                 </div>
 
             </header>
-
 
             <main className="content">
 
                 <h2 className="section-title">LO MÁS VENDIDO</h2>
 
                 <div className="movies">
-                    {movies.slice(0, 8).map((movie)=> (  //coge las primeras 8 del array
+                    {movies.slice(0, 8).map((movie) => (
                         <div className="movie" key={movie.id}>
-                            <img src={movie.posterUrl} alt={movie.title} className="movie-poster" />
+                            <img
+                                src={movie.posterUrl}
+                                alt={movie.title}
+                                className="movie-poster"
+                            />
                             <h3>{movie.title}</h3>
                             <p>{movie.year}</p>
                             <p>{movie.genres.join(", ")}</p>
