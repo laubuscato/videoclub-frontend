@@ -1,3 +1,5 @@
+/* contenedor principal */
+
 .home {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -23,6 +25,11 @@
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 40px;
+  margin-top: -10px;
+  margin-left: -14px;
+
+  font-size: 32px;
+  font-weight: bold;
 }
 
 .menu-item {
@@ -37,6 +44,7 @@
 
 .genres li {
   margin: 8px 0;
+
   opacity: 0.8;
   cursor: pointer;
 }
@@ -66,13 +74,15 @@
 }
 
 .search::placeholder {
-  color: #aaa;
+  color: #f5a623;
 }
 
 .header-actions span {
   margin-left: 20px;
   color: #f5a623;
   cursor: pointer;
+
+  transition: all 0.15s ease;
 }
 
 /* CONTENT */
