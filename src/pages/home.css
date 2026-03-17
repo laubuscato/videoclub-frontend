@@ -4,33 +4,26 @@
   display: grid;
   grid-template-columns: 220px 1fr;
   grid-template-rows: 80px 1fr;
-
   min-height: 100vh;
-
   background: #1d1d1d;
   color: white;
   font-family: 'Nunito', sans-serif;
 }
 
-
-/* sidebar */
+/* SIDEBAR */
 
 .sidebar {
   grid-row: 1 / 3;
-
+  background: #2c2c2c;
+  padding: 30px;
+  border-radius: 0 20px 20px 0;
   display: flex;
   flex-direction: column;
-
-  padding: 30px;
-
-  background: #2c2c2c;
-  border-radius: 0 20px 20px 0;
 }
 
-
-/* título VIDEOCLUB */
-
 .logo {
+  font-size: 28px;
+  font-weight: bold;
   margin-bottom: 40px;
   margin-top: -10px;
   margin-left: -14px;
@@ -38,9 +31,6 @@
   font-size: 32px;
   font-weight: bold;
 }
-
-
-/* menú lateral */
 
 .menu-item {
   margin-bottom: 20px;
@@ -64,39 +54,22 @@
   color: #f5a623;
 }
 
-
-/* header */
+/* HEADER */
 
 .header {
   grid-column: 2;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 20px 40px;
-}
-
-
-/* buscador */
-
-.search-container {
-  position: relative;
-
-  display: flex;
-  align-items: center;
 }
 
 .search {
   width: 300px;
-  padding: 10px 16px 10px 40px;
-
-  font-size: 16px;
-
+  padding: 10px 16px;
   border-radius: 25px;
   border: 2px solid #f5a623;
-
-  background: #f5a52317;
+  background: transparent;
   color: white;
 }
 
@@ -104,75 +77,15 @@
   color: #f5a623;
 }
 
-.search-icon {
-  position: absolute;
-  left: 15px;
-
-  font-size: 16px;
-  color: #f5a623;
-}
-
-.search:focus {
-  outline: none;
-  border: 2px solid #f5a623;
-  box-shadow: 0 0 8px rgba(245, 166, 35, 0.5);
-}
-
-
-/* header actions */
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
-
 .header-actions span {
-  color: #f5a623;
-  cursor: pointer;
-}
-
-.header-actions span:hover {
-  opacity: 0.8;
-}
-
-
-/* cuenta y carrito */
-
-.account,
-.cart {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
+  margin-left: 20px;
   color: #f5a623;
   cursor: pointer;
 
   transition: all 0.15s ease;
 }
 
-.account-icon,
-.cart-icon {
-  font-size: 22px;
-  padding-right: 2px;
-}
-
-
-/* efecto click */
-
-.account:active,
-.cart:active {
-  transform: scale(0.95);
-  opacity: 0.8;
-}
-
-.account:focus,
-.cart:focus {
-  outline: none;
-}
-
-
-/* contenido */
+/* CONTENT */
 
 .content {
   padding: 30px 40px;
@@ -182,19 +95,47 @@
   margin-bottom: 25px;
 }
 
-
-/* grid de películas */
+/* MOVIES GRID */
 
 .movies {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-
   gap: 25px;
 }
 
 .movie {
-  height: 140px;
-
   background: #333;
-  border-radius: 12px;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.movie-poster {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.movie h3 {
+  font-size: 18px;
+  margin: 0;
+  color: #fff;
+}
+
+.movie p {
+  margin: 0;
+  color: #cfcfcf;
+  font-size: 14px;
+  line-height: 1.4;
 }
