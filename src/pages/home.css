@@ -4,32 +4,36 @@
   display: grid;
   grid-template-columns: 220px 1fr;
   grid-template-rows: 80px 1fr;
+
   min-height: 100vh;
+
   background: #1d1d1d;
   color: white;
   font-family: 'Nunito', sans-serif;
 }
 
-/* SIDEBAR */
+
+/* sidebar */
 
 .sidebar {
   grid-row: 1 / 3;
-  background: #2c2c2c;
-  padding: 30px;
-  border-radius: 0 20px 20px 0;
+
   display: flex;
   flex-direction: column;
+
+  padding: 30px;
+
+  background: #2c2c2c;
+  border-radius: 0 20px 20px 0;
 }
 
 .logo {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
+
   margin-bottom: 40px;
   margin-top: -10px;
   margin-left: -14px;
-
-  font-size: 32px;
-  font-weight: bold;
 }
 
 .menu-item {
@@ -47,6 +51,8 @@
 
   opacity: 0.8;
   cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .genres li:hover {
@@ -54,38 +60,117 @@
   color: #f5a623;
 }
 
-/* HEADER */
+
+/* header */
 
 .header {
   grid-column: 2;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 20px 40px;
+}
+
+
+/* buscador */
+
+.search-container {
+  position: relative;
+
+  display: flex;
+  align-items: center;
 }
 
 .search {
   width: 300px;
-  padding: 10px 16px;
+  height: 42px;
+
+  padding: 10px 16px 10px 40px;
+
+  font-size: 16px;
+  color: white;
+
   border-radius: 25px;
   border: 2px solid #f5a623;
-  background: transparent;
-  color: white;
+  background: #f5a52321;
+
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
 }
 
 .search::placeholder {
   color: #f5a623;
 }
 
-.header-actions span {
-  margin-left: 20px;
-  color: #f5a623;
-  cursor: pointer;
-
-  transition: all 0.15s ease;
+.search:hover {
+  border-color: #ffb84d;
 }
 
-/* CONTENT */
+.search:focus {
+  outline: none;
+  border-color: #f5a623;
+  box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
+}
+
+
+/* icono lupa */
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+
+  font-size: 16px;
+  color: #f5a623;
+
+  pointer-events: none;
+}
+
+
+/* botones header */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.header-actions span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 42px;
+
+  font-size: 18px;
+  color: #f5a623;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.header-actions svg {
+  font-size: 20px;
+}
+
+.header-actions span:hover {
+  color: #ffb84d;
+  text-shadow: 0 0 6px rgba(245, 166, 35, 0.6);
+}
+
+.header-actions span:hover svg {
+  filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.7));
+}
+
+.header-actions span:active {
+  transform: scale(0.92);
+}
+
+
+/* contenido */
 
 .content {
   padding: 30px 40px;
@@ -95,22 +180,31 @@
   margin-bottom: 25px;
 }
 
-/* MOVIES GRID */
+
+/* grid de películas */
 
 .movies {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+
   gap: 25px;
 }
 
+
+/* tarjeta peli */
+
 .movie {
-  background: #333;
-  border-radius: 16px;
-  overflow: hidden;
-  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  padding: 14px;
+
+  background: #333;
+  border-radius: 16px;
+
+  overflow: hidden;
+
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -122,20 +216,25 @@
 .movie-poster {
   width: 100%;
   height: 280px;
+
   object-fit: cover;
+
   border-radius: 10px;
   display: block;
 }
 
 .movie h3 {
-  font-size: 18px;
   margin: 0;
+
+  font-size: 18px;
   color: #fff;
 }
 
 .movie p {
   margin: 0;
-  color: #cfcfcf;
+
   font-size: 14px;
   line-height: 1.4;
+
+  color: #cfcfcf;
 }
