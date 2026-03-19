@@ -2,6 +2,7 @@ import "./home.css";
 import { movies } from "../data/movies";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Home() {
 
@@ -69,17 +70,24 @@ function Home() {
                 <h2 className="section-title">LO MÁS VENDIDO</h2>
 
                 <div className="movies">
-                    {movies.slice(0, 8).map((movie) => (
-                        <div className="movie" key={movie.id}>
-                            <img
-                                src={movie.posterUrl}
-                                alt={movie.title}
-                                className="movie-poster"
-                            />
-                            <h3>{movie.title}</h3>
-                            <p>{movie.year}</p>
-                            <p>{movie.genres.join(", ")}</p>
-                        </div>
+                   {/**  {movies.slice(0, 8).map((movie) => (   */}   {/**Muestra las primeras 8 peliculas */}
+
+                   {movies.filter((movie) => movie.year === "2012") 
+                   .slice(0, 8)
+                   .map((movie) =>(
+                    
+                        <Link to={`/movie/${movie.id}`} key={movie.id} className="movie-link">
+                            <div className="movie">
+                                <img
+                                    src={movie.posterUrl}
+                                    alt={movie.title}
+                                    className="movie-poster"
+                                />
+                                <h3>{movie.title}</h3>
+                                <p>{movie.year}</p>
+                                <p>{movie.genres.join(", ")}</p>
+                            </div>
+                        </Link>
                     ))}
                 </div>
 

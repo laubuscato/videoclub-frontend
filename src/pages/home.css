@@ -238,3 +238,9 @@
 
   color: #cfcfcf;
 }
+
+.movie-link{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}

@@ -1,3 +1,4 @@
+import "./MovieDetail.css";
 import { useParams, Link } from "react-router-dom"
 import { movies } from "../data/movies"
 
