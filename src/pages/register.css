@@ -1,5 +1,5 @@
 /* contenedor principal */
-.login-container {
+.register-container {
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -8,15 +8,15 @@
 }
 
 
-/* caja del login */
-.login-box {
+/* caja */
+.register-box {
     position: relative;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    padding: 120px 200px;
+    padding: 80px 200px;
     background: #2a2a2a;
     border-radius: 12px;
 
@@ -25,109 +25,87 @@
 }
 
 
-/* contenido interno */
-.login-content {
+/* contenido */
+.register-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     width: 100%;
-    max-width: 520px;
+    max-width: 600px;
 }
 
 
 /* título */
-.login-content h1 {
+.register-content h1 {
     text-align: center;
-    font-size: 52px;
+    font-size: 42px;
     margin: 0;
     color: #f5a623;
 }
 
 
 /* subtítulo */
-.login-subtitle {
+.register-subtitle {
     text-align: center;
-    font-size: 22px;
+    font-size: 18px;
     color: #ccc;
 }
 
 
-/* inputs */
-.login-content input {
+/* fila de inputs */
+.form-row {
+    display: flex;
+    gap: 15px;
     width: 100%;
-    padding: 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
 }
 
-/* placeholder */
-.login-content input::placeholder {
+
+/* inputs */
+.form-row input {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.form-row input::placeholder {
     color: #999;
 }
 
-/* focus input */
-.login-content input:focus {
+.form-row input:focus {
     outline: none;
     box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
 }
 
 
 /* botón */
-.login-content button {
+.register-content button {
+    margin-top: 22px;
     width: 60%;
-    padding: 20px;
+    padding: 16px;
     background: #f5a623;
     border: none;
     border-radius: 8px;
     cursor: pointer;
 
-    font-size: 26px;
+    font-size: 20px;
     color: white;
     font-weight: bold;
 
     transition: all 0.2s ease;
 }
 
-/* hover botón */
-.login-content button:hover {
+.register-content button:hover {
     box-shadow:
         0 0 10px rgba(245, 166, 35, 0.6),
         0 0 25px rgba(245, 166, 35, 0.4);
     transform: translateY(-2px);
 }
 
-/* click botón */
-.login-content button:active {
+.register-content button:active {
     transform: scale(0.97);
-    box-shadow: 0 0 5px rgba(245, 166, 35, 0.4);
-}
-
-
-/* texto registro */
-.register-text {
-    font-size: 18px;
-    color: #ccc;
-    text-align: center;
-    margin-top: 10px;
-}
-
-
-/* enlace registro */
-.register-link {
-    color: #f5a623;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-    margin-left: 5px;
-    transition: all 0.2s ease;
-}
-
-/* hover enlace */
-.register-link:hover {
-    color: #ffb84d;
-    text-decoration: underline;
 }
 
 
@@ -136,29 +114,25 @@
     position: absolute;
     top: 20px;
     left: 20px;
-
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-/* icono flecha */
 .back-button svg {
-    font-size: 38px;
+    font-size: 34px;
     color: #f5a623;
     stroke-width: 3;
 }
 
-/* hover flecha */
 .back-button:hover svg {
     filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.8));
 }
 
-/* click flecha */
 .back-button:active {
-    transform: scale(0.5);
+    transform: scale(0.9);
 }
 
-/* animación entrada */
+
+/* animación */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -168,16 +142,4 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* input con error */
-.input-error {
-    border: 2px solid #ff4d4d;
-}
-
-/* texto error */
-.error-text {
-    color: #ff4d4d;
-    font-size: 14px;
-    margin-top: -10px;
 }

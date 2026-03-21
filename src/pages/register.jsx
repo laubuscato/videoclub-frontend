@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { register } from "../services/api"
+import { useNavigate } from "react-router-dom"
+import { FiArrowLeft } from "react-icons/fi"
+import "./register.css"
 
 function Register() {
 
@@ -12,7 +15,11 @@ function Register() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    async function handleRegister() {
+    const navigate = useNavigate()
+
+    async function handleRegister(e) {
+
+        e.preventDefault()
 
         const data = await register({
             firstName,
@@ -26,27 +33,87 @@ function Register() {
         })
 
         console.log(data)
-
+        navigate("/login")
     }
 
     return (
-        <div>
+        <div className="register-container">
+            <div className="register-box">
 
-        <h1>Register</h1>
+                <div className="back-button" onClick={() => navigate("/login")}>
+                    <FiArrowLeft />
+                </div>
 
-        <input placeholder="Nombre" onChange={(e)=>setFirstName(e.target.value)} />
-        <input placeholder="Apellido" onChange={(e)=>setLastName(e.target.value)} />
-        <input placeholder="DNI" onChange={(e)=>setDni(e.target.value)} />
-        <input placeholder="Teléfono" onChange={(e)=>setPhone(e.target.value)} />
-        <input placeholder="Dirección" onChange={(e)=>setAddress(e.target.value)} />
-        <input placeholder="Tarjeta" onChange={(e)=>setCardNumber(e.target.value)} />
-        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
+                <form className="register-content" onSubmit={handleRegister}>
 
-        <button onClick={handleRegister}>
-            Register
-        </button>
+                    <h1>Regístrate</h1>
 
+                    <p className="register-subtitle">
+                        Crea tu cuenta para empezar
+                    </p>
+
+                    <div className="form-row">
+                        <input
+                            placeholder="Nombre"
+                            required
+                            onChange={(e)=>setFirstName(e.target.value)}
+                        />
+                        <input
+                            placeholder="Apellido"
+                            required
+                            onChange={(e)=>setLastName(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-row">
+                        <input
+                            placeholder="DNI"
+                            required
+                            onChange={(e)=>setDni(e.target.value)}
+                        />
+                        <input
+                            placeholder="Teléfono"
+                            required
+                            onChange={(e)=>setPhone(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-row">
+                        <input
+                            placeholder="Dirección"
+                            required
+                            onChange={(e)=>setAddress(e.target.value)}
+                        />
+                        <input
+                            placeholder="Tarjeta"
+                            required
+                            onChange={(e)=>setCardNumber(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-row">
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            required
+                            onChange={(e)=>setEmail(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            required
+                            minLength={4}
+                            onChange={(e)=>setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    <button type="submit">
+                        Crear cuenta
+                    </button>
+
+                </form>
+
+            </div>
         </div>
     )
 }
