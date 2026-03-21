@@ -1,0 +1,143 @@
+/* contenedor principal */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1d1d1d;
+}
+
+
+/* caja del login */
+.login-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 120px 200px;
+    background: #2a2a2a;
+    border-radius: 12px;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.6s ease;
+}
+
+
+/* contenido interno */
+.login-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 520px;
+}
+
+
+/* título */
+.login-content h1 {
+    text-align: center;
+    font-size: 52px;
+    margin: 0;
+    color: #f5a623;
+}
+
+
+/* subtítulo */
+.login-subtitle {
+    text-align: center;
+    font-size: 22px;
+    color: #ccc;
+}
+
+
+/* inputs */
+.login-content input {
+    width: 100%;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.login-content input::placeholder {
+    color: #999;
+}
+
+.login-content input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
+}
+
+
+/* botón */
+.login-content button {
+    width: 60%;
+    padding: 20px;
+    background: #f5a623;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    font-size: 26px;
+    color: white;
+    font-weight: bold;
+
+    transition: all 0.2s ease;
+}
+
+
+/* hover botón */
+.login-content button:hover {
+    box-shadow: 
+        0 0 10px rgba(245, 166, 35, 0.6),
+        0 0 25px rgba(245, 166, 35, 0.4);
+    transform: translateY(-2px);
+}
+
+
+/* click botón */
+.login-content button:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 5px rgba(245, 166, 35, 0.4);
+}
+
+
+/* texto registro */
+.register-text {
+    font-size: 18px;
+    color: #ccc;
+    text-align: center;
+    margin-top: 10px;
+}
+
+
+/* enlace registro */
+.register-link {
+    color: #f5a623;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: all 0.2s ease;
+}
+
+
+/* hover enlace */
+.register-link:hover {
+    color: #ffb84d;
+    text-decoration: underline;
+}
+
+
+/* animación entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -51,7 +51,7 @@ function Home() {
 
                 <div className="header-actions">
 
-                    <span className="account" onClick={() => navigate("/")}>
+                    <span className="account" onClick={() => navigate("/login")}>
                         <FiUser className="account-icon" />
                         Mi cuenta
                     </span>
@@ -70,11 +70,11 @@ function Home() {
                 <h2 className="section-title">LO MÁS VENDIDO</h2>
 
                 <div className="movies">
-                   {/**  {movies.slice(0, 8).map((movie) => (   */}   {/**Muestra las primeras 8 peliculas */}
+                    {/**  {movies.slice(0, 8).map((movie) => (   */}   {/**Muestra las primeras 8 peliculas */}
 
-                   {movies.filter((movie) => movie.year === "2012") 
-                   .slice(0, 8)
-                   .map((movie) =>(
+                    {movies.filter((movie) => movie.year === "2012") 
+                    .slice(0, 8)
+                    .map((movie) =>(
                     
                         <Link to={`/movie/${movie.id}`} key={movie.id} className="movie-link">
                             <div className="movie">
