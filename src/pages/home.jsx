@@ -51,12 +51,19 @@ function Home() {
 
                 <div className="header-actions">
 
-                    <span className="account" onClick={() => navigate("/login")}>
+                    <span 
+                        className="account" 
+                        onClick={() => navigate("/login")}
+                    >
                         <FiUser className="account-icon" />
                         Mi cuenta
                     </span>
 
-                    <span className="cart">
+                    <span 
+                        className="cart"
+                        onClick={() => navigate("/cart")}
+                        style={{ cursor: "pointer" }}
+                    >
                         <FiShoppingCart className="cart-icon" />
                         Mi cesta
                     </span>
@@ -70,13 +77,17 @@ function Home() {
                 <h2 className="section-title">LO MÁS VENDIDO</h2>
 
                 <div className="movies">
-                    {/**  {movies.slice(0, 8).map((movie) => (   */}   {/**Muestra las primeras 8 peliculas */}
 
-                    {movies.filter((movie) => movie.year === "2012") 
-                    .slice(0, 8)
-                    .map((movie) =>(
-                    
-                        <Link to={`/movie/${movie.id}`} key={movie.id} className="movie-link">
+                    {movies
+                        .filter((movie) => movie.year === "2012")
+                        .slice(0, 8)
+                        .map((movie) => (
+
+                        <Link 
+                            to={`/movie/${movie.id}`} 
+                            key={movie.id} 
+                            className="movie-link"
+                        >
                             <div className="movie">
                                 <img
                                     src={movie.posterUrl}
@@ -88,7 +99,9 @@ function Home() {
                                 <p>{movie.genres.join(", ")}</p>
                             </div>
                         </Link>
+
                     ))}
+
                 </div>
 
             </main>

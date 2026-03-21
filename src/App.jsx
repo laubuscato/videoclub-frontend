@@ -4,6 +4,7 @@ import Login from "./pages/login"
 import Home from "./pages/home"
 import Register from "./pages/register"
 import MovieDetail from "./pages/MovieDetail"
+import Cart from "./pages/cart";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/movie/:id" element={<MovieDetail />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
