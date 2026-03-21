@@ -48,10 +48,8 @@
 
 .genres li {
   margin: 8px 0;
-
   opacity: 0.8;
   cursor: pointer;
-
   transition: all 0.2s ease;
 }
 
@@ -78,7 +76,6 @@
 
 .search-container {
   position: relative;
-
   display: flex;
   align-items: center;
 }
@@ -97,7 +94,6 @@
   background: #f5a52321;
 
   box-sizing: border-box;
-
   transition: all 0.2s ease;
 }
 
@@ -114,9 +110,6 @@
   border-color: #f5a623;
   box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
 }
-
-
-/* icono lupa */
 
 .search-icon {
   position: absolute;
@@ -148,7 +141,6 @@
   color: #f5a623;
 
   cursor: pointer;
-
   transition: all 0.2s ease;
 }
 
@@ -181,17 +173,16 @@
 }
 
 
-/* grid de películas */
+/* grid películas */
 
 .movies {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-
   gap: 25px;
 }
 
 
-/* tarjeta peli */
+/* tarjeta película */
 
 .movie {
   display: flex;
@@ -204,7 +195,6 @@
   border-radius: 16px;
 
   overflow: hidden;
-
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -218,29 +208,165 @@
   height: 280px;
 
   object-fit: cover;
-
   border-radius: 10px;
-  display: block;
 }
 
 .movie h3 {
   margin: 0;
-
   font-size: 18px;
-  color: #fff;
 }
 
 .movie p {
   margin: 0;
-
   font-size: 14px;
   line-height: 1.4;
-
   color: #cfcfcf;
 }
 
-.movie-link{
-  text-decoration: none;
-  color: inherit;
+
+/* modal */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.85);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.modal-content {
+  position: relative;
+
+  width: 900px;
+  max-width: 90%;
+  max-height: 90vh;
+
+  background: #2a2a2a;
+  border-radius: 16px;
+
+  color: white;
+  overflow-x: hidden;
+}
+
+
+/* botón cerrar */
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+
+/* banner */
+
+.modal-banner-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.modal-banner {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* degradado */
+
+.modal-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    to top,
+    rgba(42, 42, 42, 1) 0%,
+    rgba(42, 42, 42, 0.7) 40%,
+    rgba(42, 42, 42, 0) 100%
+  );
+}
+
+
+/* título */
+
+.modal-title {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  margin: 0;
+  font-size: 36px;
+  font-weight: bold;
+  color: #f5a623;
+}
+
+
+/* info */
+
+.modal-info {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-info p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+
+/* botón añadir */
+
+.modal-add-button {
+  margin-top: 40px;
+
+  padding: 14px 30px;
+
+  background: #f5a623;
+  border: none;
+  border-radius: 8px;
+
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+
+  cursor: pointer;
+
   display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  transition: all 0.2s ease;
+}
+
+.modal-add-button:hover {
+  box-shadow: 
+    0 0 10px rgba(245, 166, 35, 0.6),
+    0 0 20px rgba(245, 166, 35, 0.4);
+
+  transform: translateY(-2px);
+}
+
+.modal-add-button:active {
+  transform: scale(0.97);
 }

@@ -54,7 +54,7 @@
 }
 
 
-/* botón (por si luego lo usas) */
+/* botón */
 .cart-button {
     width: 60%;
     padding: 20px;
@@ -84,7 +84,7 @@
 }
 
 
-/* botón volver*/
+/* botón volver */
 .back-button {
     position: absolute;
     top: 20px;

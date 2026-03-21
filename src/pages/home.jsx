@@ -2,11 +2,12 @@ import "./home.css";
 import { movies } from "../data/movies";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function Home() {
 
     const navigate = useNavigate();
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
     return (
         <div className="home">
@@ -83,26 +84,79 @@ function Home() {
                         .slice(0, 8)
                         .map((movie) => (
 
-                        <Link 
-                            to={`/movie/${movie.id}`} 
-                            key={movie.id} 
-                            className="movie-link"
+                        <div 
+                            key={movie.id}
+                            className="movie"
+                            onClick={() => setSelectedMovie(movie)}
+                            style={{ cursor: "pointer" }}
                         >
-                            <div className="movie">
-                                <img
-                                    src={movie.posterUrl}
-                                    alt={movie.title}
-                                    className="movie-poster"
-                                />
-                                <h3>{movie.title}</h3>
-                                <p>{movie.year}</p>
-                                <p>{movie.genres.join(", ")}</p>
-                            </div>
-                        </Link>
+                            <img
+                                src={movie.posterUrl}
+                                alt={movie.title}
+                                className="movie-poster"
+                            />
+                            <h3>{movie.title}</h3>
+                            <p>{movie.year}</p>
+                            <p>{movie.genres.join(", ")}</p>
+                        </div>
 
                     ))}
 
                 </div>
+
+                {selectedMovie && (
+                    <div 
+                        className="modal-overlay"
+                        onClick={() => setSelectedMovie(null)}
+                    >
+
+                        <div 
+                            className="modal-content"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+
+                            <span 
+                                className="modal-close"
+                                onClick={() => setSelectedMovie(null)}
+                            >
+                                ✕
+                            </span>
+
+                            <div className="modal-banner-container">
+
+                                <img 
+                                    src={selectedMovie.posterUrl} 
+                                    alt={selectedMovie.title}
+                                    className="modal-banner"
+                                />
+
+                                <div className="modal-gradient"></div>
+
+                                <h2 className="modal-title">
+                                    {selectedMovie.title}
+                                </h2>
+
+                            </div>
+
+                            <div className="modal-info">
+
+                                <p><strong>Año:</strong> {selectedMovie.year}</p>
+                                <p><strong>Duración:</strong> {selectedMovie.runtime} min</p>
+                                <p><strong>Géneros:</strong> {selectedMovie.genres.join(", ")}</p>
+                                <p><strong>Director:</strong> {selectedMovie.director}</p>
+                                <p><strong>Actores:</strong> {selectedMovie.actors}</p>
+                                <p><strong>Sinopsis:</strong> {selectedMovie.plot}</p>
+
+                                <button className="modal-add-button">
+                                    Añadir a la cesta
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                )}
 
             </main>
 
