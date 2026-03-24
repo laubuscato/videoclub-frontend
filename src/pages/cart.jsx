@@ -96,9 +96,18 @@ function Cart() {
                 </div>
 
                 {cartItems.length > 0 && (
-                    <p className="cart-price bottom">
-                        Total: {totalPrice.toFixed(2)} €
-                    </p>
+                    <>
+                        <p className="cart-price bottom">
+                            Total: {totalPrice.toFixed(2)} €
+                        </p>
+
+                        <button 
+                            className="checkout-button"
+                            onClick={() => navigate("/checkout")}
+                        >
+                            Proceder a pagar
+                        </button>
+                    </>
                 )}
 
             </div>

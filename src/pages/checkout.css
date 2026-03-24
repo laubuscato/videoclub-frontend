@@ -1,0 +1,231 @@
+/* contenedor */
+
+.checkout-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1d1d1d;
+}
+
+
+/* caja */
+
+.checkout-box {
+    position: relative;
+    width: 600px;
+    max-width: 90%;
+    padding: 40px;
+    background: #2a2a2a;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+
+/* botón volver */
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+}
+
+.back-button svg {
+    font-size: 28px;
+    color: #f5a623;
+}
+
+.back-button:hover svg {
+    filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.8));
+}
+
+
+/* título */
+
+.checkout-title {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #f5a623;
+    font-size: 32px;
+}
+
+
+/* método pago */
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+
+    padding: 16px;
+    background: #333;
+    border-radius: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+/* iconos tarjetas */
+
+.card-icons {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.card-icons img {
+    height: 40px;
+}
+
+
+/* formulario */
+
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+
+/* grupo campo */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+
+/* labels */
+
+.field label {
+    font-size: 14px;
+    color: #ccc;
+}
+
+
+/* inputs */
+
+.field input {
+    width: 100%;
+    padding: 16px;
+
+    border-radius: 8px;
+    border: 1px solid #555;
+
+    background: #1d1d1d;
+    color: white;
+    font-size: 16px;
+
+    transition: all 0.2s ease;
+}
+
+.field input::placeholder {
+    color: #888;
+}
+
+.field input:focus {
+    outline: none;
+    border: 1px solid #f5a623;
+    box-shadow: 0 0 10px rgba(245, 166, 35, 0.4);
+}
+
+
+/* fila */
+
+.row {
+    display: flex;
+    gap: 60px;
+}
+
+.row .field {
+    flex: 1;
+}
+
+
+/* botón */
+
+.pay-button {
+    margin-top: 10px;
+    padding: 18px;
+    width: 300px;
+    margin: 10px auto 0;
+
+    background: linear-gradient(135deg, #f5a623, #ffb84d);
+    border: none;
+    border-radius: 10px;
+
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pay-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(245, 166, 35, 0.5);
+}
+
+.pay-button:active {
+    transform: scale(0.97);
+}
+
+/* layout dos columnas */
+
+.checkout-layout {
+    display: flex;
+    gap: 40px;
+}
+
+
+/* izquierda */
+
+.checkout-left {
+    flex: 2;
+}
+
+
+/* derecha resumen */
+
+.checkout-summary {
+    flex: 1;
+    background: #333;
+    padding: 40px;
+    border-radius: 12px;
+    height: fit-content;
+    margin-left:30px;
+}
+
+
+/* items */
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+
+/* total */
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #f5a623;
+}

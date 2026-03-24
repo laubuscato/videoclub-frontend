@@ -4,7 +4,7 @@
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* para que crezca hacia abajo */
+    align-items: flex-start;
     padding: 40px 0;
     background: #1d1d1d;
 }
@@ -236,4 +236,37 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* botón pagar */
+
+.checkout-button {
+    margin-top: 20px;
+
+    width: 100%;
+    padding: 16px;
+
+    background: linear-gradient(135deg, #f5a623, #ffb84d);
+    border: none;
+    border-radius: 10px;
+
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.checkout-button:hover {
+    box-shadow: 
+        0 0 10px rgba(245, 166, 35, 0.6),
+        0 0 20px rgba(245, 166, 35, 0.4);
+
+    transform: translateY(-2px);
+}
+
+.checkout-button:active {
+    transform: scale(0.97);
 }

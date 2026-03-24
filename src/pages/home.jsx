@@ -232,7 +232,7 @@ function Home() {
 
                 {showToast && (
                     <div className="toast">
-                        ✅ Película añadida a la cesta
+                        Película añadida a la cesta
                     </div>
                 )}
 
