@@ -11,6 +11,17 @@ function Home() {
     const [movies, setMovies] = useState([]);
     const [movieDetails, setMovieDetails] = useState(null);
 
+    const addToCart = (movie) => {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        const exists = cart.find(item => item.id === movie.id);
+
+        if (!exists) {
+            cart.push(movie);
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
+    };
+
     useEffect(() => {
         getPopularMovies().then(setMovies);
     }, []);
@@ -23,7 +34,6 @@ function Home() {
                 <div className="logo">LUMI</div>
 
                 <div className="menu-item">Home</div>
-
                 <div className="menu-item">Géneros</div>
 
                 <ul className="genres">
@@ -165,7 +175,14 @@ function Home() {
                                         <p><strong>Actores:</strong> {movieDetails.actors}</p>
                                         <p><strong>Sinopsis:</strong> {movieDetails.overview}</p>
 
-                                        <button className="modal-add-button">
+                                        <button 
+                                            className="modal-add-button"
+                                            onClick={() => addToCart({
+                                                id: selectedMovie.id,
+                                                title: selectedMovie.title,
+                                                poster_path: selectedMovie.poster_path
+                                            })}
+                                        >
                                             Añadir a la cesta
                                         </button>
                                     </>
