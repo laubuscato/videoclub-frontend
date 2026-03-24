@@ -1,20 +1,26 @@
 import "./home.css";
-import { movies } from "../data/movies";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getPopularMovies, getMovieDetails, getMovieCredits } from "../services/tmdb";
 
 function Home() {
 
     const navigate = useNavigate();
     const [selectedMovie, setSelectedMovie] = useState(null);
+    const [movies, setMovies] = useState([]);
+    const [movieDetails, setMovieDetails] = useState(null);
+
+    useEffect(() => {
+        getPopularMovies().then(setMovies);
+    }, []);
 
     return (
         <div className="home">
 
             <aside className="sidebar">
 
-                <div className="logo">VIDEOCLUB</div>
+                <div className="logo">LUMI</div>
 
                 <div className="menu-item">Home</div>
 
@@ -43,11 +49,7 @@ function Home() {
 
                 <div className="search-container">
                     <FiSearch className="search-icon" />
-
-                    <input
-                        className="search"
-                        placeholder="Search"
-                    />
+                    <input className="search" placeholder="Search" />
                 </div>
 
                 <div className="header-actions">
@@ -79,25 +81,37 @@ function Home() {
 
                 <div className="movies">
 
-                    {movies
-                        .filter((movie) => movie.year === "2012")
-                        .slice(0, 8)
-                        .map((movie) => (
+                    {movies.slice(0, 8).map((movie) => (
 
                         <div 
                             key={movie.id}
                             className="movie"
-                            onClick={() => setSelectedMovie(movie)}
+                            onClick={async () => {
+
+                                setSelectedMovie(movie);
+                                setMovieDetails(null);
+
+                                const details = await getMovieDetails(movie.id);
+                                const credits = await getMovieCredits(movie.id);
+
+                                const director = credits.crew.find(p => p.job === "Director");
+                                const actors = credits.cast.slice(0, 4);
+
+                                setMovieDetails({
+                                    ...details,
+                                    director: director?.name,
+                                    actors: actors.map(a => a.name).join(", ")
+                                });
+                            }}
                             style={{ cursor: "pointer" }}
                         >
                             <img
-                                src={movie.posterUrl}
+                                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                 alt={movie.title}
                                 className="movie-poster"
                             />
                             <h3>{movie.title}</h3>
-                            <p>{movie.year}</p>
-                            <p>{movie.genres.join(", ")}</p>
+                            <p>{movie.release_date?.split("-")[0]}</p>
                         </div>
 
                     ))}
@@ -125,7 +139,7 @@ function Home() {
                             <div className="modal-banner-container">
 
                                 <img 
-                                    src={selectedMovie.posterUrl} 
+                                    src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`} 
                                     alt={selectedMovie.title}
                                     className="modal-banner"
                                 />
@@ -140,16 +154,22 @@ function Home() {
 
                             <div className="modal-info">
 
-                                <p><strong>Año:</strong> {selectedMovie.year}</p>
-                                <p><strong>Duración:</strong> {selectedMovie.runtime} min</p>
-                                <p><strong>Géneros:</strong> {selectedMovie.genres.join(", ")}</p>
-                                <p><strong>Director:</strong> {selectedMovie.director}</p>
-                                <p><strong>Actores:</strong> {selectedMovie.actors}</p>
-                                <p><strong>Sinopsis:</strong> {selectedMovie.plot}</p>
+                                {!movieDetails ? (
+                                    <p>Cargando...</p>
+                                ) : (
+                                    <>
+                                        <p><strong>Año:</strong> {movieDetails.release_date?.split("-")[0]}</p>
+                                        <p><strong>Duración:</strong> {movieDetails.runtime} min</p>
+                                        <p><strong>Géneros:</strong> {movieDetails.genres?.map(g => g.name).join(", ")}</p>
+                                        <p><strong>Director:</strong> {movieDetails.director}</p>
+                                        <p><strong>Actores:</strong> {movieDetails.actors}</p>
+                                        <p><strong>Sinopsis:</strong> {movieDetails.overview}</p>
 
-                                <button className="modal-add-button">
-                                    Añadir a la cesta
-                                </button>
+                                        <button className="modal-add-button">
+                                            Añadir a la cesta
+                                        </button>
+                                    </>
+                                )}
 
                             </div>
 
