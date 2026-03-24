@@ -27,6 +27,8 @@
   border-radius: 0 20px 20px 0;
 }
 
+/* logo */
+
 .logo {
   font-size: 32px;
   font-weight: bold;
@@ -36,10 +38,14 @@
   margin-left: -14px;
 }
 
+/* menú */
+
 .menu-item {
   margin-bottom: 20px;
   font-weight: bold;
 }
+
+/* géneros */
 
 .genres {
   list-style: none;
@@ -110,6 +116,8 @@
   border-color: #f5a623;
   box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
 }
+
+/* icono buscador */
 
 .search-icon {
   position: absolute;
@@ -257,7 +265,7 @@
 }
 
 
-/* botón cerrar */
+/* cerrar */
 
 .modal-close {
   position: absolute;
@@ -369,4 +377,116 @@
 
 .modal-add-button:active {
   transform: scale(0.97);
+}
+
+
+/* toast */
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+
+  background: linear-gradient(135deg, #f5a623, #ffb84d);
+  color: white;
+
+  padding: 14px 20px;
+  border-radius: 10px;
+
+  font-weight: bold;
+  font-size: 16px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+
+  z-index: 9999;
+
+  animation: toastInOut 2s ease;
+}
+
+/* animación */
+
+@keyframes toastInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+
+
+/* carrito */
+
+.cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* contenedor icono */
+
+.cart-wrapper {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+/* icono */
+
+.cart-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* badge */
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  background: #ffb84d;
+  color: black !important;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  width: 20px !important;
+  height: 20px !important;
+
+  border-radius: 50%;
+
+  text-align: center;
+  line-height: 20px;
+
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* texto */
+
+.cart-text {
+  font-size: 14px;
+}
+
+/* brillo */
+.cart:hover .cart-badge {
+  box-shadow: 0 0 8px rgba(255, 184, 77, 0.7);
+  transform: scale(1.1);
 }

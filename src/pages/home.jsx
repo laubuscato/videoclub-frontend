@@ -10,6 +10,8 @@ function Home() {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [movies, setMovies] = useState([]);
     const [movieDetails, setMovieDetails] = useState(null);
+    const [cartCount, setCartCount] = useState(0);
+    const [showToast, setShowToast] = useState(false);
 
     const addToCart = (movie) => {
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -19,11 +21,36 @@ function Home() {
         if (!exists) {
             cart.push(movie);
             localStorage.setItem("cart", JSON.stringify(cart));
+
+            window.dispatchEvent(new Event("cartUpdated"));
+
+            setShowToast(true);
+
+            setTimeout(() => {
+                setShowToast(false);
+            }, 2000);
         }
     };
 
     useEffect(() => {
         getPopularMovies().then(setMovies);
+    }, []);
+
+    useEffect(() => {
+
+        const updateCart = () => {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            setCartCount(cart.length);
+        };
+
+        updateCart();
+
+        window.addEventListener("cartUpdated", updateCart);
+
+        return () => {
+            window.removeEventListener("cartUpdated", updateCart);
+        };
+
     }, []);
 
     return (
@@ -75,10 +102,18 @@ function Home() {
                     <span 
                         className="cart"
                         onClick={() => navigate("/cart")}
-                        style={{ cursor: "pointer" }}
                     >
-                        <FiShoppingCart className="cart-icon" />
-                        Mi cesta
+                        <div className="cart-wrapper">
+                            <FiShoppingCart className="cart-icon" />
+
+                            {cartCount > 0 && (
+                                <span className="cart-badge">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </div>
+
+                        <span className="cart-text">Mi cesta</span>
                     </span>
 
                 </div>
@@ -192,6 +227,12 @@ function Home() {
 
                         </div>
 
+                    </div>
+                )}
+
+                {showToast && (
+                    <div className="toast">
+                        ✅ Película añadida a la cesta
                     </div>
                 )}
 

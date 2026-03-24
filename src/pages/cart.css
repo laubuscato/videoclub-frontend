@@ -1,90 +1,206 @@
 /* contenedor principal */
+
 .cart-container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* para que crezca hacia abajo */
+    padding: 40px 0;
     background: #1d1d1d;
 }
 
 
-/* caja de la cesta */
+/* caja */
+
 .cart-box {
     position: relative;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 900px;
+    max-width: 90%;
 
-    padding: 120px 200px;
+    display: flex;
+    flex-direction: column;
+
+    padding: 60px 40px;
     background: #2a2a2a;
-    border-radius: 12px;
+    border-radius: 16px;
 
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     animation: fadeIn 0.6s ease;
+
+    max-height: none;
+    overflow: visible;
 }
 
 
-/* contenido interno */
+/* contenido */
+
 .cart-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 30px;
     width: 100%;
-    max-width: 520px;
 }
 
 
 /* título */
+
 .cart-title {
     text-align: center;
-    font-size: 52px;
+    font-size: 42px;
     margin: 0;
     color: #f5a623;
 }
 
 
-/* mensaje vacío */
+/* vacío */
+
 .cart-empty {
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     color: #ccc;
     font-style: italic;
 }
 
 
-/* botón */
-.cart-button {
-    width: 60%;
-    padding: 20px;
-    background: #f5a623;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+/* lista */
 
-    font-size: 22px;
-    color: white;
-    font-weight: bold;
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+
+/* item */
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    background: #333;
+    padding: 15px;
+    border-radius: 12px;
 
     transition: all 0.2s ease;
 }
 
-/* hover botón */
-.cart-button:hover {
-    box-shadow:
-        0 0 10px rgba(245, 166, 35, 0.6),
-        0 0 25px rgba(245, 166, 35, 0.4);
+.cart-item:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-/* click botón */
-.cart-button:active {
-    transform: scale(0.97);
+
+/* imagen */
+
+.cart-img {
+    width: 70px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+/* título peli */
+
+.cart-movie-title {
+    flex: 1;
+    font-size: 18px;
+    color: white;
+}
+
+
+/* botón eliminar */
+
+.cart-remove {
+    background: transparent;
+    border: 2px solid #ff4d4d;
+
+    color: #ff4d4d;
+    font-weight: bold;
+
+    padding: 8px 14px;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.cart-remove:hover {
+    background: #ff4d4d;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+}
+
+
+/* footer */
+
+.cart-footer {
+    margin-top: 20px;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* total */
+
+.cart-total {
+    font-size: 16px;
+    font-weight: bold;
+    color: #f5a623;
+    margin: 0;
+}
+
+
+/* botón vaciar */
+
+.cart-clear {
+    background: transparent;
+    border: 2px solid #ff4d4d;
+
+    color: #ff4d4d;
+    font-weight: bold;
+
+    padding: 10px 18px;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.cart-clear:hover {
+    background: #ff4d4d;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.6);
+}
+
+.cart-clear:active {
+    transform: scale(0.96);
+}
+
+
+/* precio abajo */
+
+.cart-price.bottom {
+    margin-top: 40px;
+
+    text-align: right;
+
+    font-size: 24px;
+    font-weight: bold;
+    color: #f5a623;
 }
 
 
 /* botón volver */
+
 .back-button {
     position: absolute;
     top: 20px;
@@ -94,25 +210,23 @@
     transition: all 0.2s ease;
 }
 
-/* icono flecha */
 .back-button svg {
     font-size: 38px;
     color: #f5a623;
     stroke-width: 3;
 }
 
-/* hover flecha */
 .back-button:hover svg {
     filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.8));
 }
 
-/* click flecha */
 .back-button:active {
     transform: scale(0.9);
 }
 
 
-/* animación entrada */
+/* animación */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
