@@ -2,7 +2,7 @@ import "./home.css";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getPopularMovies, getMovieDetails, getMovieCredits } from "../services/tmdb";
+import { getPopularMovies, getMovieDetails, getMovieCredits, searchMovies } from "../services/tmdb";
 
 function Home() {
 
@@ -12,6 +12,7 @@ function Home() {
     const [movieDetails, setMovieDetails] = useState(null);
     const [cartCount, setCartCount] = useState(0);
     const [showToast, setShowToast] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const addToCart = (movie) => {
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -53,6 +54,22 @@ function Home() {
 
     }, []);
 
+
+                    {/** BUSCADOR */}
+    useEffect(() => {
+        const trimmedSearch = searchTerm.trim();
+
+        if(trimmedSearch === ""){
+            getPopularMovies().then(setMovies);
+            return;
+        }
+
+        searchMovies(trimmedSearch).then(setMovies);
+
+    }, [searchTerm]);
+
+    {/** ------------------ */}
+
     return (
         <div className="home">
 
@@ -84,9 +101,16 @@ function Home() {
 
             <header className="header">
 
+
+                    {/** Buscador */}
                 <div className="search-container">
                     <FiSearch className="search-icon" />
-                    <input className="search" placeholder="Search" />
+                    <input 
+                    className="search" 
+                    placeholder="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
 
                 <div className="header-actions">
