@@ -1,0 +1,69 @@
+/* página de detalle de película */
+.movie-detail {
+  min-height: 100vh;
+  background: #1d1d1d;
+  color: white;
+  padding: 40px;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* enlace volver */
+.back-link {
+  display: inline-block;
+  margin-bottom: 30px;
+  color: #f5a623;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* tarjeta con imagen e info en dos columnas */
+.movie-detail-card {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  background: #2c2c2c;
+  border-radius: 20px;
+  padding: 30px;
+  align-items: start;
+}
+
+/* poster de la película */
+.movie-detail-poster {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+/* título */
+.movie-detail-info h1 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 36px;
+}
+
+/* párrafos de info */
+.movie-detail-info p {
+  margin: 0 0 14px;
+  line-height: 1.6;
+  color: #e0e0e0;
+}
+
+/* etiquetas en naranja */
+.movie-detail-info strong {
+  color: #f5a623;
+}
+
+/* responsive: una columna en pantallas pequeñas */
+@media (max-width: 900px) {
+  .movie-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .movie-detail-poster {
+    max-width: 320px;
+  }
+}

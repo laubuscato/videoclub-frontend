@@ -1,0 +1,544 @@
+/* layout principal con sidebar y contenido */
+.home {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 80px 1fr;
+  min-height: 100vh;
+  background: #1d1d1d;
+  color: white;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* sidebar izquierdo */
+.sidebar {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background: #2c2c2c;
+  border-radius: 0 20px 20px 0;
+}
+
+/* logo */
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  margin-top: -10px;
+  margin-left: -14px;
+}
+
+/* items del menú lateral */
+.menu-item {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* lista de géneros */
+.genres {
+  list-style: none;
+  padding: 0;
+}
+
+.genres li {
+  margin: 8px 0;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.genres li:hover {
+  opacity: 1;
+  color: #f5a623;
+}
+
+/* header superior */
+.header {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+
+/* buscador */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search {
+  width: 300px;
+  height: 42px;
+  padding: 10px 16px 10px 40px;
+  font-size: 16px;
+  color: white;
+  border-radius: 25px;
+  border: 2px solid #f5a623;
+  background: #f5a52321;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.search::placeholder {
+  color: #f5a623;
+}
+
+.search:hover {
+  border-color: #ffb84d;
+}
+
+.search:focus {
+  outline: none;
+  border-color: #f5a623;
+  box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
+}
+
+/* icono lupa del buscador */
+.search-icon {
+  position: absolute;
+  left: 15px;
+  font-size: 16px;
+  color: #f5a623;
+  pointer-events: none;
+}
+
+/* botones del header (usuario y carrito) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.header-actions span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 42px;
+  font-size: 18px;
+  color: #f5a623;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-actions svg {
+  font-size: 20px;
+}
+
+.header-actions span:hover {
+  color: #ffb84d;
+  text-shadow: 0 0 6px rgba(245, 166, 35, 0.6);
+}
+
+.header-actions span:hover svg {
+  filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.7));
+}
+
+.header-actions span:active {
+  transform: scale(0.92);
+}
+
+/* área de contenido principal */
+.content {
+  padding: 30px 40px;
+}
+
+/* título de sección */
+.section-title {
+  margin-bottom: 25px;
+}
+
+/* grid de 3 columnas para las películas */
+.movies {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-bottom: 16px;
+}
+
+/* tarjeta de película */
+.movie {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: transparent;
+  padding: 0;
+}
+
+.movie:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* imagen de la película */
+.movie img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* overlay con título y año sobre la imagen */
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 14px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+}
+
+.movie h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  line-height: 1.3;
+}
+
+.movie p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* fondo oscuro del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* modal en horizontal: imagen + info */
+.modal-content {
+  position: relative;
+  width: 900px;
+  max-width: 90%;
+  max-height: 90vh;
+  background: #2a2a2a;
+  border-radius: 16px;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+/* botón cerrar modal */
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  color: white;
+}
+
+/* columna izquierda con la imagen */
+.modal-banner-container {
+  position: relative;
+  width: 45%;
+  flex-shrink: 0;
+}
+
+.modal-banner-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* degradado de izquierda a derecha sobre la imagen */
+.modal-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(42, 42, 42, 0) 0%,
+    rgba(42, 42, 42, 0.8) 100%
+  );
+}
+
+/* título sobre la imagen */
+.modal-title {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  margin: 0;
+  font-size: 26px;
+  font-weight: bold;
+  color: #f5a623;
+}
+
+/* columna derecha con la info */
+.modal-info {
+  flex: 1;
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  justify-content: center;
+}
+
+.modal-info p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* botón añadir a la cesta */
+.modal-add-button {
+  margin-top: 20px;
+  padding: 14px 30px;
+  background: #f5a623;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.modal-add-button:hover {
+  box-shadow: 
+    0 0 10px rgba(245, 166, 35, 0.6),
+    0 0 20px rgba(245, 166, 35, 0.4);
+  transform: translateY(-2px);
+}
+
+.modal-add-button:active {
+  transform: scale(0.97);
+}
+
+/* toast de notificación */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #f5a623, #ffb84d);
+  color: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  z-index: 9999;
+  animation: toastInOut 2s ease;
+}
+
+/* animación del toast: aparece y desaparece */
+@keyframes toastInOut {
+  0% { opacity: 0; transform: translateY(30px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(30px); }
+}
+
+/* icono del carrito con badge */
+.cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.cart-wrapper {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.cart-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* badge con el número de items */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ffb84d;
+  color: black !important;
+  font-size: 11px;
+  font-weight: bold;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-text {
+  font-size: 14px;
+}
+
+/* brillo del badge al hacer hover */
+.cart:hover .cart-badge {
+  box-shadow: 0 0 8px rgba(255, 184, 77, 0.7);
+  transform: scale(1.1);
+}
+
+/* sección de filtros en el sidebar */
+.filters {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.filter-label {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  background: #2a2a2a;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.filter-select:hover {
+  background: #333;
+}
+
+/* menú desplegable del usuario */
+.user-menu-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 100;
+  min-width: 160px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.2s ease;
+}
+
+/* opción del dropdown */
+.user-dropdown-item {
+  padding: 12px 18px;
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-dropdown-item:hover {
+  background: #333;
+}
+
+/* opción cerrar sesión en rojo */
+.user-dropdown-item.logout {
+  color: #ff4d4d;
+  border-top: 1px solid #444;
+  font-weight: bold;
+}
+
+.user-dropdown-item.logout:hover {
+  background: transparent;
+  color: #ff4d4d;
+  box-shadow: inset 0 0 10px rgba(255, 77, 77, 0.1);
+}
+
+/* selector de días en el modal */
+.modal-dias {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.dias-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* botones + y - de días */
+.dias-btn {
+  background: transparent;
+  border: 2px solid #f5a623;
+  color: #f5a623;
+  font-size: 18px;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dias-btn:hover {
+  background: #f5a623;
+  color: white;
+}
+
+/* número de días seleccionado */
+.dias-count {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* precio calculado en el modal */
+.modal-price {
+  font-size: 18px;
+  color: #f5a623;
+  margin: 10px 0;
+}
+
+/* animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,461 @@
+/* contenedor principal de la página admin */
+.admin-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 0;
+    background: #1d1d1d;
+}
+
+/* caja central con todo el contenido */
+.admin-box {
+    position: relative;
+    width: 1100px;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 60px 40px;
+    background: #2a2a2a;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.6s ease;
+}
+
+/* título principal */
+.admin-title {
+    text-align: center;
+    font-size: 42px;
+    margin: 0;
+    color: #f5a623;
+}
+
+/* contenedor de las pestañas */
+.admin-tabs {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 16px;
+}
+
+/* botón de pestaña */
+.admin-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: transparent;
+    border: 2px solid #444;
+    border-radius: 10px;
+    color: #aaa;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* hover pestaña */
+.admin-tab:hover {
+    border-color: #f5a623;
+    color: #f5a623;
+}
+
+/* pestaña activa */
+.admin-tab.active {
+    border-color: #f5a623;
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+}
+
+/* subtítulo de sección */
+.admin-subtitle {
+    font-size: 20px;
+    color: #f5a623;
+    margin: 0 0 16px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+}
+
+/* mensaje cuando no hay datos */
+.admin-empty {
+    text-align: center;
+    font-size: 16px;
+    color: #aaa;
+    font-style: italic;
+    padding: 20px 0;
+}
+
+/* layout de dos columnas para usuarios */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* columna izquierda con lista de usuarios */
+.admin-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* fila de usuario */
+.admin-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #333;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+/* hover fila */
+.admin-item:hover {
+    border-color: #f5a623;
+}
+
+/* fila seleccionada */
+.admin-item.selected {
+    border-color: #f5a623;
+    background: rgba(245, 166, 35, 0.08);
+}
+
+/* info del usuario en la fila */
+.admin-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+/* nombre del usuario */
+.admin-item-name {
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+/* subtexto (email) */
+.admin-item-sub {
+    font-size: 13px;
+    color: #aaa;
+    margin: 0;
+}
+
+/* botón eliminar pequeño en la fila */
+.admin-delete-btn {
+    background: transparent;
+    border: 2px solid #ff4d4d;
+    color: #ff4d4d;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.admin-delete-btn:hover {
+    background: #ff4d4d;
+    color: white;
+}
+
+/* panel de detalle del usuario */
+.admin-detail {
+    background: #333;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* grid de campos del detalle */
+.admin-detail-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px 16px;
+    margin-bottom: 24px;
+}
+
+/* etiqueta del campo */
+.admin-detail-label {
+    font-size: 13px;
+    color: #aaa;
+    font-weight: bold;
+}
+
+/* valor del campo */
+.admin-detail-value {
+    font-size: 14px;
+    color: white;
+}
+
+/* botón eliminar grande en el detalle */
+.admin-delete-full-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 2px solid #ff4d4d;
+    color: #ff4d4d;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    justify-content: center;
+}
+
+.admin-delete-full-btn:hover {
+    background: #ff4d4d;
+    color: white;
+}
+
+/* sección de películas */
+.admin-movies-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* cabecera con título y botón crear */
+.admin-movies-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* botón crear nueva película */
+.admin-create-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f5a623;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-create-btn:hover {
+    box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
+    transform: translateY(-1px);
+}
+
+/* formulario crear/editar película */
+.admin-form {
+    background: #333;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* título del formulario */
+.admin-form-title {
+    font-size: 18px;
+    color: #f5a623;
+    margin: 0;
+}
+
+/* input del formulario */
+.admin-input {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    padding: 10px 14px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: #f5a623;
+}
+
+/* textarea descripción */
+.admin-textarea {
+    height: 90px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* botones del formulario */
+.admin-form-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* botón guardar */
+.admin-save-btn {
+    flex: 1;
+    padding: 10px;
+    background: #f5a623;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-save-btn:hover {
+    box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
+}
+
+/* botón cancelar */
+.admin-cancel-btn {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: 2px solid #555;
+    border-radius: 8px;
+    color: #aaa;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-cancel-btn:hover {
+    border-color: #aaa;
+    color: white;
+}
+
+/* lista de películas */
+.admin-movies-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* fila de película */
+.admin-movie-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #333;
+    padding: 14px 16px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.admin-movie-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* info de la película */
+.admin-movie-info {
+    flex: 1;
+}
+
+/* botones de acción de la película */
+.admin-movie-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* botón editar película */
+.admin-edit-btn {
+    background: transparent;
+    border: 2px solid #f5a623;
+    color: #f5a623;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.admin-edit-btn:hover {
+    background: #f5a623;
+    color: white;
+}
+
+/* toast de notificación */
+.admin-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+}
+
+.admin-toast.success {
+    background: #2ecc71;
+    color: white;
+}
+
+.admin-toast.error {
+    background: #ff4d4d;
+    color: white;
+}
+
+/* animación de entrada */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* buscador wrapper */
+.admin-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* icono del buscador */
+.admin-search-icon {
+    position: absolute;
+    left: 12px;
+    color: #f5a623;
+    font-size: 16px;
+}
+
+/* input del buscador */
+.admin-search {
+    width: 100%;
+    padding: 10px 16px 10px 38px;
+    background: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+}
+
+.admin-search:focus {
+    outline: none;
+    border-color: #f5a623;
+}
+
+.admin-search::placeholder {
+    color: #aaa;
+}
