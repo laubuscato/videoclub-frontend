@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { FiArrowLeft, FiTrash2, FiEdit, FiPlus, FiUser, FiFilm, FiSearch } from "react-icons/fi"
-import { getUsers, getUserDetail, deleteUser, getMovies, createMovie, updateMovie } from "../services/api"
+import { FiArrowLeft, FiTrash2, FiEdit, FiPlus, FiUser, FiFilm, FiSearch, FiClock } from "react-icons/fi"
+import { getUsers, getUserDetail, getUserRentals, deleteUser, getMovies, createMovie, updateMovie, deleteMovie } from "../services/api"
 import "./admin.css"
 
 function Admin() {
@@ -14,11 +14,13 @@ function Admin() {
     // estado de usuarios
     const [users, setUsers] = useState([])
     const [selectedUser, setSelectedUser] = useState(null)
+    const [userRentals, setUserRentals] = useState([])
+    const [loadingRentals, setLoadingRentals] = useState(false)
     const [userSearch, setUserSearch] = useState("")
 
     // estado de películas
     const [movies, setMovies] = useState([])
-    const [movieForm, setMovieForm] = useState({ movieTitle: "", desc: "", year: "" })
+    const [movieForm, setMovieForm] = useState({ movieTitle: "", desc: "", year: "", director: "", genero: "", actores: "", duracion: "", posterUrl: "" })
     const [editingMovie, setEditingMovie] = useState(null)
     const [showMovieForm, setShowMovieForm] = useState(false)
     const [movieSearch, setMovieSearch] = useState("")
@@ -33,7 +35,6 @@ function Admin() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // carga usuarios y películas en paralelo
     const loadData = async () => {
         setLoading(true)
         try {
@@ -47,7 +48,6 @@ function Admin() {
         }
     }
 
-    // muestra un toast y lo oculta tras 2.5s
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type })
         setTimeout(() => setToast({ show: false, message: "", type: "success" }), 2500)
@@ -60,35 +60,49 @@ function Admin() {
             await deleteUser(id)
             setUsers(prev => prev.filter(u => u.id !== id))
             setSelectedUser(null)
+            setUserRentals([])
             showToast("Usuario eliminado correctamente")
         } catch (error) {
             showToast(error.message || "Error al eliminar usuario", "error")
         }
     }
 
-    // carga el detalle de un usuario al hacer click
+    // carga el detalle y el historial de alquileres de un usuario
     const handleSelectUser = async (id) => {
         try {
             const detail = await getUserDetail(id)
             setSelectedUser(detail)
+            setLoadingRentals(true)
+            setUserRentals([])
+            try {
+                const rentals = await getUserRentals(id)
+                setUserRentals(rentals)
+            } catch {
+                setUserRentals([])
+            } finally {
+                setLoadingRentals(false)
+            }
         } catch (error) {
             showToast(error.message || "Error al obtener usuario", "error")
         }
     }
 
-    // crea una nueva película con los datos del formulario
+    // crea una nueva película
     const handleCreateMovie = async () => {
         try {
             await createMovie({
                 movieTitle: movieForm.movieTitle,
                 desc: movieForm.desc,
-                year: parseInt(movieForm.year)
+                year: parseInt(movieForm.year),
+                director: movieForm.director,
+                genero: movieForm.genero,
+                actores: movieForm.actores,
+                duracion: movieForm.duracion ? parseInt(movieForm.duracion) : undefined,
+                posterUrl: movieForm.posterUrl
             })
             showToast("Película creada correctamente")
-            setMovieForm({ movieTitle: "", desc: "", year: "" })
-            setShowMovieForm(false)
-            const data = await getMovies()
-            setMovies(data)
+            resetMovieForm()
+            setMovies(await getMovies())
         } catch (error) {
             showToast(error.message || "Error al crear película", "error")
         }
@@ -101,43 +115,64 @@ function Admin() {
                 id: editingMovie.id,
                 movieTitle: movieForm.movieTitle,
                 desc: movieForm.desc,
-                year: parseInt(movieForm.year)
+                year: parseInt(movieForm.year),
+                director: movieForm.director,
+                genero: movieForm.genero,
+                actores: movieForm.actores,
+                duracion: movieForm.duracion ? parseInt(movieForm.duracion) : undefined,
+                posterUrl: movieForm.posterUrl
             })
             showToast("Película actualizada correctamente")
-            setEditingMovie(null)
-            setMovieForm({ movieTitle: "", desc: "", year: "" })
-            setShowMovieForm(false)
-            const data = await getMovies()
-            setMovies(data)
+            resetMovieForm()
+            setMovies(await getMovies())
         } catch (error) {
             showToast(error.message || "Error al actualizar película", "error")
         }
     }
 
-    // abre el formulario en modo edición con los datos de la película
+    // elimina una película tras confirmación
+    const handleDeleteMovie = async (id) => {
+        if (!window.confirm("¿Seguro que quieres eliminar esta película?")) return
+        try {
+            await deleteMovie(id)
+            setMovies(prev => prev.filter(m => m.id !== id))
+            showToast("Película eliminada correctamente")
+        } catch (error) {
+            showToast(error.message || "Error al eliminar película", "error")
+        }
+    }
+
     const openEditMovie = (movie) => {
         setEditingMovie(movie)
         setMovieForm({
-            movieTitle: movie.movieTitle,
+            movieTitle: movie.movieTitle || "",
             desc: movie.desc || "",
-            year: movie.year || ""
+            year: movie.year || "",
+            director: movie.director || "",
+            genero: movie.genero || "",
+            actores: movie.actores || "",
+            duracion: movie.duracion || "",
+            posterUrl: movie.posterUrl || ""
         })
         setShowMovieForm(true)
     }
 
-    // abre el formulario en modo creación
     const openCreateMovie = () => {
         setEditingMovie(null)
-        setMovieForm({ movieTitle: "", desc: "", year: "" })
+        resetMovieForm()
         setShowMovieForm(true)
     }
 
-    // filtra usuarios por nombre o email
+    const resetMovieForm = () => {
+        setMovieForm({ movieTitle: "", desc: "", year: "", director: "", genero: "", actores: "", duracion: "", posterUrl: "" })
+        setShowMovieForm(false)
+        setEditingMovie(null)
+    }
+
     const filteredUsers = users.filter(u =>
         `${u.firstName} ${u.lastName} ${u.email}`.toLowerCase().includes(userSearch.toLowerCase())
     )
 
-    // filtra películas por título
     const filteredMovies = movies.filter(m =>
         m.movieTitle.toLowerCase().includes(movieSearch.toLowerCase())
     )
@@ -147,14 +182,12 @@ function Admin() {
 
             <div className="admin-box">
 
-                {/* botón volver al home */}
                 <div className="back-button" onClick={() => navigate("/")}>
                     <FiArrowLeft />
                 </div>
 
                 <h1 className="admin-title">Panel de Administración</h1>
 
-                {/* pestañas de navegación */}
                 <div className="admin-tabs">
                     <button
                         className={`admin-tab ${tab === "usuarios" ? "active" : ""}`}
@@ -170,7 +203,6 @@ function Admin() {
                     </button>
                 </div>
 
-                {/* cargando */}
                 {loading && <p className="admin-empty">Cargando...</p>}
 
                 {/* pestaña usuarios */}
@@ -178,8 +210,6 @@ function Admin() {
                     <div className="admin-layout">
 
                         <div className="admin-list">
-
-                            {/* buscador de usuarios */}
                             <div className="admin-search-wrapper">
                                 <FiSearch className="admin-search-icon" />
                                 <input
@@ -194,7 +224,6 @@ function Admin() {
 
                             {filteredUsers.length === 0 && <p className="admin-empty">No hay usuarios.</p>}
 
-                            {/* lista de usuarios */}
                             {filteredUsers.map(user => (
                                 <div
                                     key={user.id}
@@ -205,13 +234,9 @@ function Admin() {
                                         <p className="admin-item-name">{user.firstName} {user.lastName}</p>
                                         <p className="admin-item-sub">{user.email}</p>
                                     </div>
-                                    {/* botón eliminar usuario */}
                                     <button
                                         className="admin-delete-btn"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            handleDeleteUser(user.id)
-                                        }}
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteUser(user.id) }}
                                     >
                                         <FiTrash2 />
                                     </button>
@@ -219,7 +244,7 @@ function Admin() {
                             ))}
                         </div>
 
-                        {/* panel de detalle del usuario seleccionado */}
+                        {/* detalle del usuario */}
                         <div className="admin-detail">
                             {!selectedUser && (
                                 <p className="admin-empty">Selecciona un usuario para ver su detalle.</p>
@@ -238,10 +263,48 @@ function Admin() {
                                         <span className="admin-detail-value">{selectedUser.phone}</span>
                                         <span className="admin-detail-label">Dirección</span>
                                         <span className="admin-detail-value">{selectedUser.address}</span>
+                                        <span className="admin-detail-label">Rol</span>
+                                        <span className="admin-detail-value">{selectedUser.role || "USER"}</span>
                                         <span className="admin-detail-label">Verificado</span>
                                         <span className="admin-detail-value">{selectedUser.isEmailVerified ? "✓ Sí" : "✗ No"}</span>
                                     </div>
-                                    {/* botón eliminar usuario desde el detalle */}
+
+                                    {/* historial de alquileres */}
+                                    <div className="admin-rentals-section">
+                                        <h3 className="admin-rentals-title">
+                                            <FiClock /> Historial de alquileres
+                                        </h3>
+
+                                        {loadingRentals && <p className="admin-empty">Cargando historial...</p>}
+
+                                        {!loadingRentals && userRentals.length === 0 && (
+                                            <p className="admin-empty">Sin alquileres registrados.</p>
+                                        )}
+
+                                        {!loadingRentals && userRentals.length > 0 && (
+                                            <div className="admin-rentals-list">
+                                                {userRentals.map(rental => (
+                                                    <div key={rental.id} className={`admin-rental-item ${rental.returnedAt ? "returned" : "active"}`}>
+                                                        <div className="admin-rental-info">
+                                                            <p className="admin-rental-title">{rental.movieTitle}</p>
+                                                            <p className="admin-rental-date">
+                                                                Alquilada: {new Date(rental.rentedAt).toLocaleDateString()}
+                                                            </p>
+                                                            {rental.returnedAt && (
+                                                                <p className="admin-rental-date">
+                                                                    Devuelta: {new Date(rental.returnedAt).toLocaleDateString()}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        <span className={`admin-rental-badge ${rental.returnedAt ? "returned" : "active"}`}>
+                                                            {rental.returnedAt ? "Devuelta" : "Activa"}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
                                     <button
                                         className="admin-delete-full-btn"
                                         onClick={() => handleDeleteUser(selectedUser.id)}
@@ -261,13 +324,11 @@ function Admin() {
 
                         <div className="admin-movies-header">
                             <h2 className="admin-subtitle">Películas ({filteredMovies.length})</h2>
-                            {/* botón abrir formulario de creación */}
                             <button className="admin-create-btn" onClick={openCreateMovie}>
                                 <FiPlus /> Nueva película
                             </button>
                         </div>
 
-                        {/* buscador de películas */}
                         <div className="admin-search-wrapper">
                             <FiSearch className="admin-search-icon" />
                             <input
@@ -278,71 +339,79 @@ function Admin() {
                             />
                         </div>
 
-                        {/* formulario crear/editar película */}
-                        {showMovieForm && (
+                        {/* formulario solo para crear nueva película */}
+                        {showMovieForm && !editingMovie && (
                             <div className="admin-form">
-                                <h3 className="admin-form-title">
-                                    {editingMovie ? "Editar película" : "Nueva película"}
-                                </h3>
-                                <input
-                                    className="admin-input"
-                                    placeholder="Título"
-                                    value={movieForm.movieTitle}
-                                    onChange={(e) => setMovieForm(prev => ({ ...prev, movieTitle: e.target.value }))}
-                                />
-                                <textarea
-                                    className="admin-input admin-textarea"
-                                    placeholder="Descripción"
-                                    value={movieForm.desc}
-                                    onChange={(e) => setMovieForm(prev => ({ ...prev, desc: e.target.value }))}
-                                />
-                                <input
-                                    className="admin-input"
-                                    placeholder="Año"
-                                    type="number"
-                                    value={movieForm.year}
-                                    onChange={(e) => setMovieForm(prev => ({ ...prev, year: e.target.value }))}
-                                />
+                                <h3 className="admin-form-title">Nueva película</h3>
+                                <div className="admin-form-row">
+                                    <input className="admin-input" placeholder="Título *" value={movieForm.movieTitle} onChange={(e) => setMovieForm(prev => ({ ...prev, movieTitle: e.target.value }))} />
+                                    <input className="admin-input" placeholder="Año *" type="number" value={movieForm.year} onChange={(e) => setMovieForm(prev => ({ ...prev, year: e.target.value }))} />
+                                </div>
+                                <div className="admin-form-row">
+                                    <input className="admin-input" placeholder="Director" value={movieForm.director} onChange={(e) => setMovieForm(prev => ({ ...prev, director: e.target.value }))} />
+                                    <input className="admin-input" placeholder="Género" value={movieForm.genero} onChange={(e) => setMovieForm(prev => ({ ...prev, genero: e.target.value }))} />
+                                </div>
+                                <div className="admin-form-row">
+                                    <input className="admin-input" placeholder="Actores" value={movieForm.actores} onChange={(e) => setMovieForm(prev => ({ ...prev, actores: e.target.value }))} />
+                                    <input className="admin-input" placeholder="Duración (min)" type="number" value={movieForm.duracion} onChange={(e) => setMovieForm(prev => ({ ...prev, duracion: e.target.value }))} />
+                                </div>
+                                <textarea className="admin-input admin-textarea" placeholder="Descripción" value={movieForm.desc} onChange={(e) => setMovieForm(prev => ({ ...prev, desc: e.target.value }))} />
+                                <input className="admin-input" placeholder="URL del poster (https://image.tmdb.org/t/p/w500/...)" value={movieForm.posterUrl} onChange={(e) => setMovieForm(prev => ({ ...prev, posterUrl: e.target.value }))} />
                                 <div className="admin-form-buttons">
-                                    {/* guardar o crear según el modo */}
-                                    <button
-                                        className="admin-save-btn"
-                                        onClick={editingMovie ? handleUpdateMovie : handleCreateMovie}
-                                    >
-                                        {editingMovie ? "Guardar cambios" : "Crear película"}
-                                    </button>
-                                    {/* cancelar y cerrar formulario */}
-                                    <button
-                                        className="admin-cancel-btn"
-                                        onClick={() => {
-                                            setShowMovieForm(false)
-                                            setEditingMovie(null)
-                                            setMovieForm({ movieTitle: "", desc: "", year: "" })
-                                        }}
-                                    >
-                                        Cancelar
-                                    </button>
+                                    <button className="admin-save-btn" onClick={handleCreateMovie}>Crear película</button>
+                                    <button className="admin-cancel-btn" onClick={resetMovieForm}>Cancelar</button>
                                 </div>
                             </div>
                         )}
 
-                        {/* lista de películas filtradas */}
+                        {/* lista de películas con formulario de edición inline */}
                         <div className="admin-movies-list">
                             {filteredMovies.map(movie => (
-                                <div key={movie.id} className="admin-movie-item">
-                                    <div className="admin-movie-info">
-                                        <p className="admin-item-name">{movie.movieTitle}</p>
-                                        <p className="admin-item-sub">{movie.year} {movie.desc && `· ${movie.desc.substring(0, 60)}...`}</p>
+                                <div key={movie.id}>
+                                    <div className={`admin-movie-item ${editingMovie?.id === movie.id ? "editing" : ""}`}>
+                                        <div className="admin-movie-info">
+                                            <p className="admin-item-name">{movie.movieTitle}</p>
+                                            <p className="admin-item-sub">
+                                                {movie.year}
+                                                {movie.genero && ` · ${movie.genero}`}
+                                                {movie.director && ` · ${movie.director}`}
+                                                {movie.desc && ` · ${movie.desc.substring(0, 50)}...`}
+                                            </p>
+                                        </div>
+                                        <div className="admin-movie-actions">
+                                            <button className="admin-edit-btn" onClick={() => openEditMovie(movie)}>
+                                                <FiEdit />
+                                            </button>
+                                            <button className="admin-delete-btn" onClick={() => handleDeleteMovie(movie.id)}>
+                                                <FiTrash2 />
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="admin-movie-actions">
-                                        {/* botón editar película */}
-                                        <button
-                                            className="admin-edit-btn"
-                                            onClick={() => openEditMovie(movie)}
-                                        >
-                                            <FiEdit />
-                                        </button>
-                                    </div>
+
+                                    {/* formulario de edición inline, debajo de la película */}
+                                    {editingMovie?.id === movie.id && (
+                                        <div className="admin-form admin-form-inline">
+                                            <h3 className="admin-form-title">Editar película</h3>
+                                            <div className="admin-form-row">
+                                                <input className="admin-input" placeholder="Título *" value={movieForm.movieTitle} onChange={(e) => setMovieForm(prev => ({ ...prev, movieTitle: e.target.value }))} />
+                                                <input className="admin-input" placeholder="Año *" type="number" value={movieForm.year} onChange={(e) => setMovieForm(prev => ({ ...prev, year: e.target.value }))} />
+                                            </div>
+                                            <div className="admin-form-row">
+                                                <input className="admin-input" placeholder="Director" value={movieForm.director} onChange={(e) => setMovieForm(prev => ({ ...prev, director: e.target.value }))} />
+                                                <input className="admin-input" placeholder="Género" value={movieForm.genero} onChange={(e) => setMovieForm(prev => ({ ...prev, genero: e.target.value }))} />
+                                            </div>
+                                            <div className="admin-form-row">
+                                                <input className="admin-input" placeholder="Actores" value={movieForm.actores} onChange={(e) => setMovieForm(prev => ({ ...prev, actores: e.target.value }))} />
+                                                <input className="admin-input" placeholder="Duración (min)" type="number" value={movieForm.duracion} onChange={(e) => setMovieForm(prev => ({ ...prev, duracion: e.target.value }))} />
+                                            </div>
+                                            <textarea className="admin-input admin-textarea" placeholder="Descripción" value={movieForm.desc} onChange={(e) => setMovieForm(prev => ({ ...prev, desc: e.target.value }))} />
+                                            <input className="admin-input" placeholder="URL del poster (https://image.tmdb.org/t/p/w500/...)" value={movieForm.posterUrl} onChange={(e) => setMovieForm(prev => ({ ...prev, posterUrl: e.target.value }))} />
+                                            <div className="admin-form-buttons">
+                                                <button className="admin-save-btn" onClick={handleUpdateMovie}>Guardar cambios</button>
+                                                <button className="admin-cancel-btn" onClick={resetMovieForm}>Cancelar</button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -352,11 +421,8 @@ function Admin() {
 
             </div>
 
-            {/* toast de notificación */}
             {toast.show && (
-                <div className={`admin-toast ${toast.type}`}>
-                    {toast.message}
-                </div>
+                <div className={`admin-toast ${toast.type}`}>{toast.message}</div>
             )}
 
         </div>

@@ -8,7 +8,6 @@
     background: #1d1d1d;
 }
 
-/* caja central con todo el contenido */
 .admin-box {
     position: relative;
     width: 1100px;
@@ -23,7 +22,6 @@
     animation: fadeIn 0.6s ease;
 }
 
-/* título principal */
 .admin-title {
     text-align: center;
     font-size: 42px;
@@ -31,7 +29,6 @@
     color: #f5a623;
 }
 
-/* contenedor de las pestañas */
 .admin-tabs {
     display: flex;
     gap: 12px;
@@ -39,7 +36,6 @@
     padding-bottom: 16px;
 }
 
-/* botón de pestaña */
 .admin-tab {
     display: flex;
     align-items: center;
@@ -55,20 +51,17 @@
     transition: all 0.2s ease;
 }
 
-/* hover pestaña */
 .admin-tab:hover {
     border-color: #f5a623;
     color: #f5a623;
 }
 
-/* pestaña activa */
 .admin-tab.active {
     border-color: #f5a623;
     color: #f5a623;
     background: rgba(245, 166, 35, 0.1);
 }
 
-/* subtítulo de sección */
 .admin-subtitle {
     font-size: 20px;
     color: #f5a623;
@@ -77,7 +70,6 @@
     padding-bottom: 8px;
 }
 
-/* mensaje cuando no hay datos */
 .admin-empty {
     text-align: center;
     font-size: 16px;
@@ -86,20 +78,18 @@
     padding: 20px 0;
 }
 
-/* layout de dos columnas para usuarios */
+/* layout dos columnas usuarios */
 .admin-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
 }
 
-/* columna izquierda con lista de usuarios */
 .admin-list {
     display: flex;
     flex-direction: column;
 }
 
-/* fila de usuario */
 .admin-item {
     display: flex;
     align-items: center;
@@ -113,40 +103,13 @@
     transition: all 0.2s ease;
 }
 
-/* hover fila */
-.admin-item:hover {
-    border-color: #f5a623;
-}
+.admin-item:hover { border-color: #f5a623; }
+.admin-item.selected { border-color: #f5a623; background: rgba(245, 166, 35, 0.08); }
 
-/* fila seleccionada */
-.admin-item.selected {
-    border-color: #f5a623;
-    background: rgba(245, 166, 35, 0.08);
-}
+.admin-item-info { display: flex; flex-direction: column; gap: 3px; }
+.admin-item-name { font-size: 15px; font-weight: bold; color: white; margin: 0; }
+.admin-item-sub { font-size: 13px; color: #aaa; margin: 0; }
 
-/* info del usuario en la fila */
-.admin-item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-/* nombre del usuario */
-.admin-item-name {
-    font-size: 15px;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-}
-
-/* subtexto (email) */
-.admin-item-sub {
-    font-size: 13px;
-    color: #aaa;
-    margin: 0;
-}
-
-/* botón eliminar pequeño en la fila */
 .admin-delete-btn {
     background: transparent;
     border: 2px solid #ff4d4d;
@@ -162,19 +125,17 @@
     flex-shrink: 0;
 }
 
-.admin-delete-btn:hover {
-    background: #ff4d4d;
-    color: white;
-}
+.admin-delete-btn:hover { background: #ff4d4d; color: white; }
 
-/* panel de detalle del usuario */
+/* panel detalle usuario */
 .admin-detail {
     background: #333;
     border-radius: 12px;
     padding: 20px;
+    overflow-y: auto;
+    max-height: 720px;
 }
 
-/* grid de campos del detalle */
 .admin-detail-grid {
     display: grid;
     grid-template-columns: 120px 1fr;
@@ -182,20 +143,53 @@
     margin-bottom: 24px;
 }
 
-/* etiqueta del campo */
-.admin-detail-label {
-    font-size: 13px;
-    color: #aaa;
+.admin-detail-label { font-size: 13px; color: #aaa; font-weight: bold; }
+.admin-detail-value { font-size: 14px; color: white; }
+
+/* historial de alquileres */
+.admin-rentals-section { margin-bottom: 20px; }
+
+.admin-rentals-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #f5a623;
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #444;
+}
+
+.admin-rentals-list { display: flex; flex-direction: column; gap: 8px; }
+
+.admin-rental-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #2a2a2a;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+}
+
+.admin-rental-item.active { border-left-color: #f5a623; }
+.admin-rental-item.returned { border-left-color: #555; opacity: 0.7; }
+
+.admin-rental-info { display: flex; flex-direction: column; gap: 2px; }
+.admin-rental-title { font-size: 14px; font-weight: bold; color: white; margin: 0; }
+.admin-rental-date { font-size: 12px; color: #aaa; margin: 0; }
+
+.admin-rental-badge {
+    font-size: 12px;
     font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
 }
 
-/* valor del campo */
-.admin-detail-value {
-    font-size: 14px;
-    color: white;
-}
+.admin-rental-badge.active { background: rgba(245, 166, 35, 0.15); color: #f5a623; }
+.admin-rental-badge.returned { background: rgba(255,255,255,0.05); color: #888; }
 
-/* botón eliminar grande en el detalle */
 .admin-delete-full-btn {
     display: flex;
     align-items: center;
@@ -211,28 +205,20 @@
     transition: all 0.2s ease;
     width: 100%;
     justify-content: center;
+    margin-top: 8px;
 }
 
-.admin-delete-full-btn:hover {
-    background: #ff4d4d;
-    color: white;
-}
+.admin-delete-full-btn:hover { background: #ff4d4d; color: white; }
 
-/* sección de películas */
-.admin-movies-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+/* sección películas */
+.admin-movies-section { display: flex; flex-direction: column; gap: 16px; }
 
-/* cabecera con título y botón crear */
 .admin-movies-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* botón crear nueva película */
 .admin-create-btn {
     display: flex;
     align-items: center;
@@ -248,12 +234,8 @@
     transition: all 0.2s ease;
 }
 
-.admin-create-btn:hover {
-    box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
-    transform: translateY(-1px);
-}
+.admin-create-btn:hover { box-shadow: 0 0 10px rgba(245, 166, 35, 0.5); transform: translateY(-1px); }
 
-/* formulario crear/editar película */
 .admin-form {
     background: #333;
     border-radius: 12px;
@@ -263,14 +245,16 @@
     gap: 12px;
 }
 
-/* título del formulario */
-.admin-form-title {
-    font-size: 18px;
-    color: #f5a623;
-    margin: 0;
+.admin-form-title { font-size: 18px; color: #f5a623; margin: 0; }
+
+/* fila de dos inputs */
+.admin-form-row {
+    display: flex;
+    gap: 12px;
 }
 
-/* input del formulario */
+.admin-form-row .admin-input { flex: 1; }
+
 .admin-input {
     background: #2a2a2a;
     border: 1px solid #444;
@@ -283,25 +267,16 @@
     transition: border 0.2s ease;
 }
 
-.admin-input:focus {
-    outline: none;
-    border-color: #f5a623;
-}
+.admin-input:focus { outline: none; border-color: #f5a623; }
 
-/* textarea descripción */
 .admin-textarea {
-    height: 90px;
+    height: 80px;
     resize: vertical;
     font-family: inherit;
 }
 
-/* botones del formulario */
-.admin-form-buttons {
-    display: flex;
-    gap: 12px;
-}
+.admin-form-buttons { display: flex; gap: 12px; }
 
-/* botón guardar */
 .admin-save-btn {
     flex: 1;
     padding: 10px;
@@ -315,11 +290,8 @@
     transition: all 0.2s ease;
 }
 
-.admin-save-btn:hover {
-    box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
-}
+.admin-save-btn:hover { box-shadow: 0 0 10px rgba(245, 166, 35, 0.5); }
 
-/* botón cancelar */
 .admin-cancel-btn {
     flex: 1;
     padding: 10px;
@@ -333,19 +305,10 @@
     transition: all 0.2s ease;
 }
 
-.admin-cancel-btn:hover {
-    border-color: #aaa;
-    color: white;
-}
+.admin-cancel-btn:hover { border-color: #aaa; color: white; }
 
-/* lista de películas */
-.admin-movies-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+.admin-movies-list { display: flex; flex-direction: column; gap: 10px; }
 
-/* fila de película */
 .admin-movie-item {
     display: flex;
     align-items: center;
@@ -356,23 +319,11 @@
     transition: all 0.2s ease;
 }
 
-.admin-movie-item:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
+.admin-movie-item:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
-/* info de la película */
-.admin-movie-info {
-    flex: 1;
-}
+.admin-movie-info { flex: 1; }
+.admin-movie-actions { display: flex; gap: 8px; }
 
-/* botones de acción de la película */
-.admin-movie-actions {
-    display: flex;
-    gap: 8px;
-}
-
-/* botón editar película */
 .admin-edit-btn {
     background: transparent;
     border: 2px solid #f5a623;
@@ -387,12 +338,23 @@
     transition: all 0.2s ease;
 }
 
-.admin-edit-btn:hover {
-    background: #f5a623;
-    color: white;
+.admin-edit-btn:hover { background: #f5a623; color: white; }
+
+/* formulario inline debajo de la película */
+.admin-form-inline {
+    margin-top: 0;
+    border-radius: 0 0 10px 10px;
+    border-top: 2px solid #f5a623;
 }
 
-/* toast de notificación */
+/* película que está siendo editada */
+.admin-movie-item.editing {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: #f5a623;
+    background: rgba(245, 166, 35, 0.08);
+}
+
 .admin-toast {
     position: fixed;
     bottom: 30px;
@@ -406,23 +368,14 @@
     animation: fadeIn 0.3s ease;
 }
 
-.admin-toast.success {
-    background: #2ecc71;
-    color: white;
-}
+.admin-toast.success { background: #2ecc71; color: white; }
+.admin-toast.error { background: #ff4d4d; color: white; }
 
-.admin-toast.error {
-    background: #ff4d4d;
-    color: white;
-}
-
-/* animación de entrada */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* buscador wrapper */
 .admin-search-wrapper {
     position: relative;
     display: flex;
@@ -430,15 +383,8 @@
     margin-bottom: 16px;
 }
 
-/* icono del buscador */
-.admin-search-icon {
-    position: absolute;
-    left: 12px;
-    color: #f5a623;
-    font-size: 16px;
-}
+.admin-search-icon { position: absolute; left: 12px; color: #f5a623; font-size: 16px; }
 
-/* input del buscador */
 .admin-search {
     width: 100%;
     padding: 10px 16px 10px 38px;
@@ -451,11 +397,5 @@
     transition: border 0.2s ease;
 }
 
-.admin-search:focus {
-    outline: none;
-    border-color: #f5a623;
-}
-
-.admin-search::placeholder {
-    color: #aaa;
-}
+.admin-search:focus { outline: none; border-color: #f5a623; }
+.admin-search::placeholder { color: #aaa; }
