@@ -1,100 +1,89 @@
-/* contenedor principal de la página */
 .cart-container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 40px 0;
-    background: #1d1d1d;
+    padding: 50px 0;
+    background: #161616;
 }
 
-/* caja central con el contenido */
 .cart-box {
     position: relative;
-    width: 900px;
+    width: 860px;
     max-width: 90%;
     display: flex;
     flex-direction: column;
-    padding: 60px 40px;
-    background: #2a2a2a;
+    padding: 60px 50px;
+    background: #1e1e1e;
     border-radius: 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    animation: fadeIn 0.6s ease;
-    max-height: none;
-    overflow: visible;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease;
 }
 
-/* contenido interior */
 .cart-content {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 28px;
     width: 100%;
 }
 
-/* título */
 .cart-title {
     text-align: center;
-    font-size: 42px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
     margin: 0;
     color: #f5a623;
 }
 
-/* mensaje cesta vacía */
 .cart-empty {
     text-align: center;
-    font-size: 18px;
-    color: #ccc;
+    font-size: 15px;
+    color: #444;
     font-style: italic;
+    padding: 30px 0;
 }
 
-/* lista de películas */
-.cart-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-}
+.cart-list { display: flex; flex-direction: column; gap: 14px; width: 100%; }
 
-/* fila de cada película */
 .cart-item {
     display: flex;
     align-items: center;
     gap: 20px;
-    background: #333;
-    padding: 15px;
+    background: #252525;
+    padding: 16px;
     border-radius: 12px;
+    border: 1px solid #2e2e2e;
     transition: all 0.2s ease;
 }
 
-/* hover fila */
 .cart-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    border-color: #333;
+    transform: translateY(-1px);
 }
 
-/* portada de la película */
 .cart-img {
-    width: 70px;
-    height: 100px;
+    width: 64px;
+    height: 92px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 6px;
     flex-shrink: 0;
 }
 
-/* título de la película */
 .cart-movie-title {
-    flex: 1;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 600;
     color: white;
 }
 
-/* botón eliminar película */
 .cart-remove {
     background: transparent;
-    border: 2px solid #ff4d4d;
-    color: #ff4d4d;
-    font-weight: bold;
+    border: 1px solid #3a3a3a;
+    color: #666;
+    font-weight: 600;
+    font-size: 13px;
     padding: 8px 14px;
     border-radius: 8px;
     cursor: pointer;
@@ -102,151 +91,104 @@
 }
 
 .cart-remove:hover {
-    background: #ff4d4d;
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+    border-color: #ff4d4d;
+    color: #ff4d4d;
 }
 
-/* footer con total y botón vaciar */
 .cart-footer {
-    margin-top: 20px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* contador de películas */
 .cart-total {
-    font-size: 16px;
-    font-weight: bold;
-    color: #f5a623;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
     margin: 0;
+    letter-spacing: 0.3px;
 }
 
-/* botón vaciar carrito */
 .cart-clear {
     background: transparent;
-    border: 2px solid #ff4d4d;
-    color: #ff4d4d;
-    font-weight: bold;
-    padding: 10px 18px;
+    border: 1px solid #3a3a3a;
+    color: #666;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.cart-clear:hover {
-    background: #ff4d4d;
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 77, 77, 0.6);
-}
+.cart-clear:hover { border-color: #ff4d4d; color: #ff4d4d; }
 
-.cart-clear:active {
-    transform: scale(0.96);
-}
-
-/* precio total abajo a la derecha */
 .cart-price.bottom {
-    margin-top: 40px;
+    margin-top: 32px;
     text-align: right;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 22px;
+    font-weight: 700;
     color: #f5a623;
 }
 
-/* botón volver */
 .back-button {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 22px;
+    left: 22px;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .back-button svg {
-    font-size: 38px;
-    color: #f5a623;
-    stroke-width: 3;
+    font-size: 24px;
+    color: #444;
+    stroke-width: 2;
+    transition: color 0.2s ease;
 }
 
-.back-button:hover svg {
-    filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.8));
-}
+.back-button:hover svg { color: #f5a623; }
 
-.back-button:active {
-    transform: scale(0.9);
-}
-
-/* animación de entrada */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* botón proceder a pagar */
 .checkout-button {
-    margin-top: 20px;
+    margin-top: 24px;
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, #f5a623, #ffb84d);
+    background: #f5a623;
     border: none;
     border-radius: 10px;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
+    color: #1a1000;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.checkout-button:hover {
-    box-shadow: 
-        0 0 10px rgba(245, 166, 35, 0.6),
-        0 0 20px rgba(245, 166, 35, 0.4);
-    transform: translateY(-2px);
-}
+.checkout-button:hover { background: #ffb84d; transform: translateY(-1px); }
+.checkout-button:active { transform: scale(0.98); }
 
-.checkout-button:active {
-    transform: scale(0.97);
-}
+.cart-movie-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 
-/* contenedor de info de cada película */
-.cart-movie-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-/* precio de la película */
 .cart-movie-price {
-    font-size: 14px;
+    font-size: 15px;
     color: #f5a623;
     margin: 0;
-    font-weight: bold;
+    font-weight: 700;
 }
 
-/* selector de días */
-.cart-dias-selector {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 6px 0;
-}
+.cart-dias-selector { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
 
-/* botones + y - de días */
 .cart-dias-btn {
     background: transparent;
-    border: 2px solid #f5a623;
-    color: #f5a623;
-    font-size: 16px;
-    font-weight: bold;
+    border: 1px solid #3a3a3a;
+    color: #888;
+    font-size: 15px;
+    font-weight: 700;
     width: 28px;
     height: 28px;
     border-radius: 6px;
@@ -257,14 +199,6 @@
     justify-content: center;
 }
 
-.cart-dias-btn:hover {
-    background: #f5a623;
-    color: white;
-}
+.cart-dias-btn:hover { border-color: #f5a623; color: #f5a623; }
 
-/* texto con el número de días */
-.cart-dias-count {
-    font-size: 14px;
-    color: #ccc;
-    min-width: 50px;
-}
+.cart-dias-count { font-size: 14px; color: #aaa; min-width: 50px; }

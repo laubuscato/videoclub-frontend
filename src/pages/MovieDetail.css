@@ -1,69 +1,72 @@
-/* página de detalle de película */
 .movie-detail {
   min-height: 100vh;
-  background: #1d1d1d;
+  background: #161616;
   color: white;
-  padding: 40px;
+  padding: 50px 40px;
   font-family: 'Nunito', sans-serif;
 }
 
-/* enlace volver */
 .back-link {
-  display: inline-block;
-  margin-bottom: 30px;
-  color: #f5a623;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 32px;
+  color: #555;
   text-decoration: none;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: color 0.2s ease;
+  cursor: pointer;
 }
 
-.back-link:hover {
-  text-decoration: underline;
-}
+.back-link:hover { color: #f5a623; }
 
-/* tarjeta con imagen e info en dos columnas */
 .movie-detail-card {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 40px;
-  background: #2c2c2c;
-  border-radius: 20px;
-  padding: 30px;
+  grid-template-columns: 300px 1fr;
+  gap: 50px;
+  background: #1e1e1e;
+  border-radius: 16px;
+  border: 1px solid #2a2a2a;
+  padding: 40px;
   align-items: start;
 }
 
-/* poster de la película */
 .movie-detail-poster {
   width: 100%;
-  border-radius: 16px;
+  border-radius: 10px;
   object-fit: cover;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 
-/* título */
 .movie-detail-info h1 {
   margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 36px;
+  margin-bottom: 24px;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: white;
 }
 
-/* párrafos de info */
 .movie-detail-info p {
   margin: 0 0 14px;
-  line-height: 1.6;
-  color: #e0e0e0;
+  line-height: 1.7;
+  color: #888;
+  font-size: 14px;
 }
 
-/* etiquetas en naranja */
 .movie-detail-info strong {
   color: #f5a623;
+  font-weight: 600;
 }
 
-/* responsive: una columna en pantallas pequeñas */
 @media (max-width: 900px) {
   .movie-detail-card {
     grid-template-columns: 1fr;
   }
 
   .movie-detail-poster {
-    max-width: 320px;
+    max-width: 260px;
   }
 }

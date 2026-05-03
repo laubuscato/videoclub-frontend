@@ -1,135 +1,121 @@
-/* contenedor principal de la página */
 .register-container {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #1d1d1d;
+    background: #161616;
 }
 
-/* caja central del formulario */
 .register-box {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 80px 200px;
-    background: #2a2a2a;
-    border-radius: 12px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    animation: fadeIn 0.6s ease;
+    padding: 70px 160px;
+    background: #1e1e1e;
+    border-radius: 16px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease;
 }
 
-/* contenido interior del formulario */
 .register-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
     width: 100%;
-    max-width: 600px;
+    max-width: 560px;
 }
 
-/* título */
 .register-content h1 {
     text-align: center;
-    font-size: 42px;
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 6px;
     margin: 0;
-    color: #f5a623;
+    background: linear-gradient(135deg, #f5a623 0%, #ffd07a 50%, #f5a623 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-/* subtítulo descriptivo */
 .register-subtitle {
     text-align: center;
-    font-size: 18px;
-    color: #ccc;
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 0.3px;
+    margin-top: -4px;
 }
 
-/* fila de dos inputs en horizontal */
 .form-row {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     width: 100%;
 }
 
-/* inputs del formulario */
 .form-row input {
     width: 100%;
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 16px;
-    background: #1d1d1d;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #161616;
     color: white;
-    border: 1px solid #555;
+    border: 1px solid #2a2a2a;
     transition: all 0.2s ease;
+    box-sizing: border-box;
+    letter-spacing: 0.3px;
 }
 
-.form-row input::placeholder {
-    color: #999;
-}
+.form-row input::placeholder { color: #444; }
+.form-row input:hover { border-color: #333; }
 
 .form-row input:focus {
     outline: none;
-    border: 1px solid #f5a623;
-    box-shadow: 0 0 8px rgba(245, 166, 35, 0.6);
+    border-color: #f5a623;
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.08);
 }
 
-/* botón registrarse */
 .register-content button {
-    margin-top: 22px;
-    width: 60%;
-    padding: 16px;
+    margin-top: 10px;
+    width: 100%;
+    padding: 15px;
     background: #f5a623;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 20px;
-    color: white;
-    font-weight: bold;
+    font-size: 14px;
+    color: #1a1000;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     transition: all 0.2s ease;
 }
 
 .register-content button:hover {
-    box-shadow:
-        0 0 10px rgba(245, 166, 35, 0.6),
-        0 0 25px rgba(245, 166, 35, 0.4);
-    transform: translateY(-2px);
+    background: #ffb84d;
+    transform: translateY(-1px);
 }
 
-.register-content button:active {
-    transform: scale(0.97);
-}
+.register-content button:active { transform: scale(0.98); }
 
-/* botón volver */
 .back-button {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 22px;
+    left: 22px;
     cursor: pointer;
 }
 
 .back-button svg {
-    font-size: 34px;
-    color: #f5a623;
-    stroke-width: 3;
+    font-size: 26px;
+    color: #444;
+    stroke-width: 2;
+    transition: color 0.2s ease;
 }
 
-.back-button:hover svg {
-    filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.8));
-}
+.back-button:hover svg { color: #f5a623; }
 
-.back-button:active {
-    transform: scale(0.9);
-}
-
-/* animación de entrada */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
 }
