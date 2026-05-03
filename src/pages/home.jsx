@@ -1,4 +1,5 @@
 import "./home.css";
+import Footer from "./footer.jsx";
 import { FiSearch, FiUser, FiShoppingCart, FiSliders, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
@@ -358,6 +359,7 @@ function Home() {
                         ))}
                     </div>
                 </main>
+                <Footer></Footer>
             </div>
 
             {/* modal */}
