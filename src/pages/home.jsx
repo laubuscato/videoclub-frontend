@@ -47,9 +47,10 @@ function Home() {
     const [director, setDirector] = useState("");
     const [actores, setActores] = useState("");
     const [duracion, setDuracion] = useState("");
+    const [sortBy, setSortBy] = useState("");
 
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+    
+    const decades = ["1920s", "1930s", "1940s", "1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s", "2020s"];
 
 
 
@@ -133,7 +134,13 @@ function Home() {
                 m.movieTitle.toLowerCase().includes(searchTerm.toLowerCase())
             )
         }
-        if (year) filtered = filtered.filter(m => String(m.year) === year)
+        if (year) {
+            const decadeStart = parseInt(year); 
+            filtered = filtered.filter (m => {
+                const movieYear = parseInt(m.year)
+                return movieYear >= decadeStart && movieYear <= decadeStart + 9
+            })
+        }
         if (genre) {
             const genreLower = genre.toLowerCase()
             const translations = genreTranslations[genreLower] || []
@@ -142,21 +149,35 @@ function Home() {
                 if (generoLower.includes(genreLower)) return true
                 return translations.some(t => generoLower.includes(t))
             })
-        }
+        } 
         if (director) filtered = filtered.filter(m => m.director?.toLowerCase().includes(director.toLowerCase()))
         if (actores) filtered = filtered.filter(m => m.actores?.toLowerCase().includes(actores.toLowerCase()))
         if (duracion === "short") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) < 90)
         else if (duracion === "medium") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) >= 90 && parseInt(m.duracion) <= 120)
         else if (duracion === "long") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) > 120)
 
+            if(sortBy === "title-asc"){
+                filtered.sort((a, b) => a.movieTitle.localeCompare(b.movieTitle));
+            } else if (sortBy === "title-desc") {
+                filtered.sort((a, b) => b.movieTitle.localeCompare(a.movieTitle));
+            } else if (sortBy === "year-desc") {
+                filtered.sort((a, b) => Number(a.year) - Number(b.year));
+            } else if (sortBy === "year-asc") {
+                filtered.sort((a, b) => Number(b.year) - Number(a.year));
+            } {/**else if (sortBy === "runtime-asc") {
+                filtered.sort((a, b) => Number(a.duracion) - Number(b.duracion));
+            } else if (sortBy === "runtime-desc") {
+                filtered.sort((a, b) => Number(b.duracion) - Number(a.duracion));
+            }  */}
+
         return filtered
-    }, [searchTerm, year, genre, director, actores, duracion, allMovies])
+    }, [searchTerm, year, genre, director, actores, duracion, sortBy, allMovies])
 
     const resetFilters = () => {
-        setYear(""); setGenre(""); setDirector(""); setActores(""); setDuracion(""); setSearchTerm("")
+        setYear(""); setGenre(""); setDirector(""); setActores(""); setDuracion(""); setSearchTerm(""); setSortBy("");
     }
 
-    const hasActiveFilters = year || genre || director || actores || duracion || searchTerm
+    const hasActiveFilters = year || genre || director || actores || duracion || searchTerm || sortBy
 
     const addToCart = (movie) => {
         if (!userId) return;
@@ -211,10 +232,10 @@ function Home() {
                         {genres.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
 
-                    <label className="filter-label">Año</label>
+                    <label className="filter-label">Década</label>
                     <select className="filter-select" value={year} onChange={(e) => setYear(e.target.value)}>
-                        <option value="">Todos</option>
-                        {years.map(y => <option key={y} value={y}>{y}</option>)}
+                        <option value="">Todas</option>
+                        {decades.map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
 
                     <label className="filter-label">Director</label>
@@ -227,6 +248,20 @@ function Home() {
                     <select className="filter-select" value={duracion} onChange={(e) => setDuracion(e.target.value)}>
                         <option value="">Todas</option>
                         {duraciones.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
+                    </select>
+
+                    {/** Filtros */}
+
+                    <label className="filter-label">Ordenar por</label>
+                    <select className="filter-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="">Por defecto</option>
+                        <option value="title-asc">Título A → Z</option>
+                        <option value="title-desc">Título Z → A</option>
+                        <option value="year-asc">Año más reciente primero</option>
+                        <option value="year-desc">Año más antiguo primero</option>
+                        {/** Opcional ya hay un filtro de duracion
+                         * <option value="runtime-asc">Duración mas corta</option>
+                        <option value="runtime-desc">Duración mas larga</option>*/}
                     </select>
                 </div>
             </aside>
