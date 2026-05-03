@@ -6,25 +6,28 @@ import { getMovies, getMe } from "../services/api";
 import { movies as moviesData } from "../data/movies.js";
 
 const genreTranslations = {
-        "acción": ["action"],
-        "comedia": ["comedy"],
-        "drama": ["drama"],
-        "terror": ["horror"],
-        "ciencia ficción": ["sci-fi", "science fiction"],
-        "aventura": ["adventure"],
-        "animación": ["animation"],
-        "romance": ["romance"],
-        "thriller": ["thriller"],
-        "crimen": ["crime"],
-        "biografía": ["biography"],
-        "historia": ["history"],
-        "western": ["western"],
-        "musical": ["music", "musical"],
-        "misterio": ["mystery"]
-    };
+    "acción": ["action"],
+    "comedia": ["comedy"],
+    "drama": ["drama"],
+    "terror": ["horror"],
+    "ciencia ficción": ["sci-fi", "science fiction"],
+    "aventura": ["adventure"],
+    "animación": ["animation"],
+    "romance": ["romance"],
+    "thriller": ["thriller"],
+    "crimen": ["crime"],
+    "biografía": ["biography"],
+    "historia": ["history"],
+    "western": ["western"],
+    "musical": ["music", "musical"],
+    "misterio": ["mystery"]
+};
+
+const posters = Object.fromEntries(
+    moviesData.map(movie => [movie.title.toLowerCase(), movie.posterUrl])
+);
 
 function Home() {
-
     const navigate = useNavigate();
 
     const [selectedMovie, setSelectedMovie] = useState(null);
@@ -37,6 +40,7 @@ function Home() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [dias, setDias] = useState(1);
+    const [heroMovie, setHeroMovie] = useState(null);
 
     const [year, setYear] = useState("");
     const [genre, setGenre] = useState("");
@@ -47,17 +51,13 @@ function Home() {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
-    const posters = Object.fromEntries(
-        moviesData.map(movie => [movie.title.toLowerCase(), movie.posterUrl])
-    );
+
 
     const genres = [
         "Acción", "Comedia", "Drama", "Terror", "Ciencia ficción",
         "Aventura", "Animación", "Romance", "Thriller", "Crimen",
         "Biografía", "Historia", "Western", "Musical", "Misterio"
     ];
-
-
 
     const duraciones = [
         { label: "Menos de 90 min", value: "short" },
@@ -70,6 +70,19 @@ function Home() {
             try {
                 const data = await getMovies();
                 setAllMovies(data);
+                // película destacada: la primera con poster
+                const withPoster = data.find(m => posters[m.movieTitle?.toLowerCase()] || m.posterUrl);
+                if (withPoster) {
+                    const localData = moviesData.find(m => m.title.toLowerCase() === withPoster.movieTitle?.toLowerCase())
+                    setHeroMovie({
+                        ...withPoster,
+                        genero: withPoster.genero || localData?.genres?.join(", ") || "",
+                        director: withPoster.director || localData?.director || "",
+                        duracion: withPoster.duracion || localData?.runtime || null,
+                        actores: withPoster.actores || localData?.actors || "",
+                        desc: withPoster.desc || localData?.plot || "",
+                    })
+                }
             } catch (error) {
                 console.log("ERROR CARGANDO PELÍCULAS:", error);
             }
@@ -120,11 +133,7 @@ function Home() {
                 m.movieTitle.toLowerCase().includes(searchTerm.toLowerCase())
             )
         }
-
-        if (year) {
-            filtered = filtered.filter(m => String(m.year) === year)
-        }
-
+        if (year) filtered = filtered.filter(m => String(m.year) === year)
         if (genre) {
             const genreLower = genre.toLowerCase()
             const translations = genreTranslations[genreLower] || []
@@ -134,26 +143,11 @@ function Home() {
                 return translations.some(t => generoLower.includes(t))
             })
         }
-
-        if (director) {
-            filtered = filtered.filter(m =>
-                m.director?.toLowerCase().includes(director.toLowerCase())
-            )
-        }
-
-        if (actores) {
-            filtered = filtered.filter(m =>
-                m.actores?.toLowerCase().includes(actores.toLowerCase())
-            )
-        }
-
-        if (duracion === "short") {
-            filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) < 90)
-        } else if (duracion === "medium") {
-            filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) >= 90 && parseInt(m.duracion) <= 120)
-        } else if (duracion === "long") {
-            filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) > 120)
-        }
+        if (director) filtered = filtered.filter(m => m.director?.toLowerCase().includes(director.toLowerCase()))
+        if (actores) filtered = filtered.filter(m => m.actores?.toLowerCase().includes(actores.toLowerCase()))
+        if (duracion === "short") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) < 90)
+        else if (duracion === "medium") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) >= 90 && parseInt(m.duracion) <= 120)
+        else if (duracion === "long") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) > 120)
 
         return filtered
     }, [searchTerm, year, genre, director, actores, duracion, allMovies])
@@ -188,6 +182,8 @@ function Home() {
         setUserName(""); setCartCount(0); setIsAdmin(false); setUserId(null); setShowUserMenu(false);
         navigate("/login");
     };
+
+    const heroPoster = heroMovie ? (posters[heroMovie.movieTitle?.toLowerCase()] || heroMovie.posterUrl) : null;
 
     return (
         <div className="home" onClick={() => setShowUserMenu(false)}>
@@ -235,104 +231,136 @@ function Home() {
                 </div>
             </aside>
 
-            <header className="header">
-                <div className="search-container">
-                    <FiSearch className="search-icon" />
-                    <input className="search" placeholder="Buscar película..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                </div>
-                <div className="header-actions">
-                    <div className="user-menu-wrapper" onClick={(e) => { e.stopPropagation(); setShowUserMenu(prev => !prev); }}>
-                        <span className="user-trigger">
-                            <FiUser />
-                            {userName ? userName : "Mi cuenta"}
-                        </span>
-                        {showUserMenu && (
-                            <div className="user-dropdown">
-                                {userId ? (
-                                    <>
-                                        <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-account"); }}>Mi cuenta</div>
-                                        <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-movies"); }}>Mis películas</div>
-                                        {isAdmin && (
-                                            <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/admin"); }}>Panel Admin</div>
-                                        )}
-                                        <div className="user-dropdown-item logout" onClick={handleLogout}>Cerrar sesión</div>
-                                    </>
-                                ) : (
-                                    <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/login"); }}>Iniciar sesión</div>
-                                )}
-                            </div>
-                        )}
+            <div className="main-area">
+
+                {/* header */}
+                <header className="header">
+                    <div className="search-container">
+                        <FiSearch className="search-icon" />
+                        <input className="search" placeholder="Buscar película..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     </div>
-                    <span className="cart" onClick={() => navigate("/cart")}>
-                        <div className="cart-wrapper">
-                            <FiShoppingCart className="cart-icon" />
-                            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-                        </div>
-                        <span className="cart-text">Mi cesta</span>
-                    </span>
-                </div>
-            </header>
-
-            <main className="content">
-                <div className="section-header">
-                    <h2 className="section-title">
-                        {hasActiveFilters ? `Resultados (${movies.length})` : "LO MÁS VENDIDO"}
-                    </h2>
-                </div>
-
-                {movies.length === 0 && <p className="no-results">No se encontraron películas con estos filtros.</p>}
-
-                <div className="movies">
-                    {movies.slice(0, hasActiveFilters ? movies.length : 9).map((movie) => (
-                        <div key={movie.id} className="movie" onClick={() => { setSelectedMovie(movie); setDias(1); }}>
-                            <img
-                                src={posters[movie.movieTitle?.toLowerCase()] || movie.posterUrl || `https://via.placeholder.com/300x450/2a2a2a/f5a623?text=${encodeURIComponent(movie.movieTitle)}`}
-                                alt={movie.movieTitle}
-                            />
-                            <div className="movie-overlay">
-                                <h3>{movie.movieTitle}</h3>
-                                <p>{movie.year}{movie.genero ? ` · ${movie.genero}` : ""}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {selectedMovie && (
-                    <div className="modal-overlay" onClick={() => setSelectedMovie(null)}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <span className="modal-close" onClick={() => setSelectedMovie(null)}>✕</span>
-                            <div className="modal-banner-container">
-                                <img
-                                    src={posters[selectedMovie.movieTitle?.toLowerCase()] || selectedMovie.posterUrl || `https://via.placeholder.com/300x450/2a2a2a/f5a623?text=${encodeURIComponent(selectedMovie.movieTitle)}`}
-                                    alt={selectedMovie.movieTitle}
-                                />
-                                <div className="modal-gradient"></div>
-                                <h2 className="modal-title">{selectedMovie.movieTitle}</h2>
-                            </div>
-                            <div className="modal-info">
-                                <p><strong>Año:</strong> {selectedMovie.year}</p>
-                                {selectedMovie.director && <p><strong>Director:</strong> {selectedMovie.director}</p>}
-                                {selectedMovie.genero && <p><strong>Género:</strong> {selectedMovie.genero}</p>}
-                                {selectedMovie.actores && <p><strong>Actores:</strong> {selectedMovie.actores}</p>}
-                                {selectedMovie.duracion && <p><strong>Duración:</strong> {selectedMovie.duracion} min</p>}
-                                {selectedMovie.desc && <p><strong>Sinopsis:</strong> {selectedMovie.desc}</p>}
-                                <div className="modal-dias">
-                                    <label><strong>Días de alquiler:</strong></label>
-                                    <div className="dias-selector">
-                                        <button className="dias-btn" onClick={() => setDias(prev => Math.max(1, prev - 1))}>−</button>
-                                        <span className="dias-count">{dias}</span>
-                                        <button className="dias-btn" onClick={() => setDias(prev => Math.min(30, prev + 1))}>+</button>
-                                    </div>
+                    <div className="header-actions">
+                        <div className="user-menu-wrapper" onClick={(e) => { e.stopPropagation(); setShowUserMenu(prev => !prev); }}>
+                            <span className="user-trigger">
+                                <FiUser />
+                                {userName ? userName : "Mi cuenta"}
+                            </span>
+                            {showUserMenu && (
+                                <div className="user-dropdown">
+                                    {userId ? (
+                                        <>
+                                            <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-account"); }}>Mi cuenta</div>
+                                            <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-movies"); }}>Mis películas</div>
+                                            {isAdmin && (
+                                                <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/admin"); }}>Panel Admin</div>
+                                            )}
+                                            <div className="user-dropdown-item logout" onClick={handleLogout}>Cerrar sesión</div>
+                                        </>
+                                    ) : (
+                                        <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/login"); }}>Iniciar sesión</div>
+                                    )}
                                 </div>
-                                <p className="modal-price"><strong>Precio:</strong> {(dias * 2).toFixed(2)} €</p>
-                                <button className="modal-add-button" onClick={() => addToCart(selectedMovie)}>Añadir a la cesta</button>
+                            )}
+                        </div>
+                        <span className="cart" onClick={() => navigate("/cart")}>
+                            <div className="cart-wrapper">
+                                <FiShoppingCart className="cart-icon" />
+                                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+                            </div>
+                            <span className="cart-text">Mi cesta</span>
+                        </span>
+                    </div>
+                </header>
+
+                {/* hero banner */}
+                {!hasActiveFilters && heroMovie && (
+                    <div className="hero" style={{ backgroundImage: heroPoster ? `url(${heroPoster})` : "none" }}>
+                        <div className="hero-overlay"></div>
+                        <div className="hero-content">
+                            <div className="hero-badge">Destacada</div>
+                            <h1 className="hero-title">{heroMovie.movieTitle}</h1>
+                            <p className="hero-meta">
+                                {heroMovie.year}
+                                {heroMovie.genero ? ` · ${heroMovie.genero}` : ""}
+                                {heroMovie.director ? ` · ${heroMovie.director}` : ""}
+                            </p>
+                            {heroMovie.desc && <p className="hero-desc">{heroMovie.desc.substring(0, 120)}...</p>}
+                            <div className="hero-buttons">
+                                <button className="hero-btn-primary" onClick={() => { setSelectedMovie(heroMovie); setDias(1); }}>
+                                    Alquilar · 2€/día
+                                </button>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {toast.show && <div className={`toast ${toast.type}`}>{toast.message}</div>}
-            </main>
+                {/* contenido */}
+                <main className="content">
+                    <div className="section-header">
+                        <h2 className="section-title">
+                            {hasActiveFilters ? `Resultados (${movies.length})` : "LO MÁS VENDIDO"}
+                        </h2>
+                    </div>
+
+                    {movies.length === 0 && <p className="no-results">No se encontraron películas con estos filtros.</p>}
+
+                    <div className="movies">
+                        {movies.slice(0, hasActiveFilters ? movies.length : 9).map((movie) => (
+                            <div key={movie.id} className="movie" onClick={() => { setSelectedMovie(movie); setDias(1); }}>
+                                <img
+                                    src={posters[movie.movieTitle?.toLowerCase()] || movie.posterUrl || `https://via.placeholder.com/300x450/2a2a2a/f5a623?text=${encodeURIComponent(movie.movieTitle)}`}
+                                    alt={movie.movieTitle}
+                                />
+                                <div className="movie-overlay">
+                                    <h3>{movie.movieTitle}</h3>
+                                    <p>{movie.year}{movie.genero ? ` · ${movie.genero}` : ""}</p>
+                                </div>
+                                <div className="movie-hover">
+                                    <p className="movie-hover-price">2€ / día</p>
+                                    <button className="movie-hover-btn">Alquilar</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </main>
+            </div>
+
+            {/* modal */}
+            {selectedMovie && (
+                <div className="modal-overlay" onClick={() => setSelectedMovie(null)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <span className="modal-close" onClick={() => setSelectedMovie(null)}>✕</span>
+                        <div className="modal-banner-container">
+                            <img
+                                src={posters[selectedMovie.movieTitle?.toLowerCase()] || selectedMovie.posterUrl || `https://via.placeholder.com/300x450/2a2a2a/f5a623?text=${encodeURIComponent(selectedMovie.movieTitle)}`}
+                                alt={selectedMovie.movieTitle}
+                            />
+                            <div className="modal-gradient"></div>
+                            <h2 className="modal-title">{selectedMovie.movieTitle}</h2>
+                        </div>
+                        <div className="modal-info">
+                            <p><strong>Año:</strong> {selectedMovie.year}</p>
+                            {selectedMovie.director && <p><strong>Director:</strong> {selectedMovie.director}</p>}
+                            {selectedMovie.genero && <p><strong>Género:</strong> {selectedMovie.genero}</p>}
+                            {selectedMovie.actores && <p><strong>Actores:</strong> {selectedMovie.actores}</p>}
+                            {selectedMovie.duracion && <p><strong>Duración:</strong> {selectedMovie.duracion} min</p>}
+                            {selectedMovie.desc && <p><strong>Sinopsis:</strong> {selectedMovie.desc}</p>}
+                            <div className="modal-dias">
+                                <label><strong>Días de alquiler:</strong></label>
+                                <div className="dias-selector">
+                                    <button className="dias-btn" onClick={() => setDias(prev => Math.max(1, prev - 1))}>−</button>
+                                    <span className="dias-count">{dias}</span>
+                                    <button className="dias-btn" onClick={() => setDias(prev => Math.min(30, prev + 1))}>+</button>
+                                </div>
+                            </div>
+                            <p className="modal-price"><strong>Precio:</strong> {(dias * 2).toFixed(2)} €</p>
+                            <button className="modal-add-button" onClick={() => addToCart(selectedMovie)}>Añadir a la cesta</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {toast.show && <div className={`toast ${toast.type}`}>{toast.message}</div>}
         </div>
     );
 }
