@@ -1,10 +1,27 @@
 import "./home.css";
 import { FiSearch, FiUser, FiShoppingCart, FiSliders, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getMovies, getMe } from "../services/api";
 import { movies as moviesData } from "../data/movies.js";
-import { useMemo } from "react";
+
+const genreTranslations = {
+        "acción": ["action"],
+        "comedia": ["comedy"],
+        "drama": ["drama"],
+        "terror": ["horror"],
+        "ciencia ficción": ["sci-fi", "science fiction"],
+        "aventura": ["adventure"],
+        "animación": ["animation"],
+        "romance": ["romance"],
+        "thriller": ["thriller"],
+        "crimen": ["crime"],
+        "biografía": ["biography"],
+        "historia": ["history"],
+        "western": ["western"],
+        "musical": ["music", "musical"],
+        "misterio": ["mystery"]
+    };
 
 function Home() {
 
@@ -21,7 +38,6 @@ function Home() {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [dias, setDias] = useState(1);
 
-    // filtros
     const [year, setYear] = useState("");
     const [genre, setGenre] = useState("");
     const [director, setDirector] = useState("");
@@ -31,7 +47,6 @@ function Home() {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
-    // mapa de título en minúsculas → url del poster
     const posters = Object.fromEntries(
         moviesData.map(movie => [movie.title.toLowerCase(), movie.posterUrl])
     );
@@ -42,13 +57,14 @@ function Home() {
         "Biografía", "Historia", "Western", "Musical", "Misterio"
     ];
 
+
+
     const duraciones = [
         { label: "Menos de 90 min", value: "short" },
         { label: "90 - 120 min", value: "medium" },
         { label: "Más de 120 min", value: "long" }
     ];
 
-    // carga películas y usuario al montar
     useEffect(() => {
         const loadMovies = async () => {
             try {
@@ -76,7 +92,6 @@ function Home() {
         loadUser();
     }, []);
 
-    // escucha el evento cartUpdated
     useEffect(() => {
         if (!userId) return;
         const updateCart = () => {
@@ -87,10 +102,8 @@ function Home() {
         return () => window.removeEventListener("cartUpdated", updateCart);
     }, [userId]);
 
-    // aplica todos los filtros reactivamente con useMemo
     const movies = useMemo(() => {
         let filtered = allMovies.map(movie => {
-            // busca en moviesData por título para obtener los campos extra
             const localData = moviesData.find(m => m.title.toLowerCase() === movie.movieTitle?.toLowerCase())
             return {
                 ...movie,
@@ -98,6 +111,7 @@ function Home() {
                 director: movie.director || localData?.director || "",
                 duracion: movie.duracion || localData?.runtime || null,
                 actores: movie.actores || localData?.actors || "",
+                desc: movie.desc || localData?.plot || "",
             }
         })
 
@@ -112,9 +126,13 @@ function Home() {
         }
 
         if (genre) {
-            filtered = filtered.filter(m =>
-                m.genero?.toLowerCase().includes(genre.toLowerCase())
-            )
+            const genreLower = genre.toLowerCase()
+            const translations = genreTranslations[genreLower] || []
+            filtered = filtered.filter(m => {
+                const generoLower = m.genero?.toLowerCase() || ""
+                if (generoLower.includes(genreLower)) return true
+                return translations.some(t => generoLower.includes(t))
+            })
         }
 
         if (director) {
@@ -140,14 +158,8 @@ function Home() {
         return filtered
     }, [searchTerm, year, genre, director, actores, duracion, allMovies])
 
-    // resetea todos los filtros
     const resetFilters = () => {
-        setYear("")
-        setGenre("")
-        setDirector("")
-        setActores("")
-        setDuracion("")
-        setSearchTerm("")
+        setYear(""); setGenre(""); setDirector(""); setActores(""); setDuracion(""); setSearchTerm("")
     }
 
     const hasActiveFilters = year || genre || director || actores || duracion || searchTerm
@@ -156,7 +168,6 @@ function Home() {
         if (!userId) return;
         const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
         const yaEnCarrito = cart.find(m => m.id === movie.id);
-
         if (yaEnCarrito) {
             setToast({ show: true, message: "Esta película ya está en tu cesta", type: "error" });
         } else {
@@ -169,32 +180,24 @@ function Home() {
             setDias(1);
             setSelectedMovie(null);
         }
-
         setTimeout(() => setToast({ show: false, message: "", type: "success" }), 2000);
     };
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        setUserName("");
-        setCartCount(0);
-        setIsAdmin(false);
-        setUserId(null);
-        setShowUserMenu(false);
+        setUserName(""); setCartCount(0); setIsAdmin(false); setUserId(null); setShowUserMenu(false);
         navigate("/login");
     };
 
     return (
         <div className="home" onClick={() => setShowUserMenu(false)}>
 
-            {/* sidebar */}
             <aside className="sidebar">
                 <div className="logo-wrapper">
                     <div className="logo">LUMI</div>
                     <div className="logo-sub">Videoclub</div>
                 </div>
-
                 <div className="sidebar-divider"></div>
-
                 <div className="sidebar-section">
                     <div className="sidebar-section-title">
                         <FiSliders />
@@ -206,96 +209,60 @@ function Home() {
                         )}
                     </div>
 
-                    {/* filtro por género */}
                     <label className="filter-label">Género</label>
                     <select className="filter-select" value={genre} onChange={(e) => setGenre(e.target.value)}>
                         <option value="">Todos</option>
-                        {genres.map(g => (
-                            <option key={g} value={g}>{g}</option>
-                        ))}
+                        {genres.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
 
-                    {/* filtro por año */}
                     <label className="filter-label">Año</label>
                     <select className="filter-select" value={year} onChange={(e) => setYear(e.target.value)}>
                         <option value="">Todos</option>
-                        {years.map(y => (
-                            <option key={y} value={y}>{y}</option>
-                        ))}
+                        {years.map(y => <option key={y} value={y}>{y}</option>)}
                     </select>
 
-                    {/* filtro por director */}
                     <label className="filter-label">Director</label>
-                    <input
-                        className="filter-input"
-                        placeholder="Ej: Nolan"
-                        value={director}
-                        onChange={(e) => setDirector(e.target.value)}
-                    />
+                    <input className="filter-input" placeholder="Ej: Nolan" value={director} onChange={(e) => setDirector(e.target.value)} />
 
-                    {/* filtro por actores */}
                     <label className="filter-label">Actores</label>
-                    <input
-                        className="filter-input"
-                        placeholder="Ej: DiCaprio"
-                        value={actores}
-                        onChange={(e) => setActores(e.target.value)}
-                    />
+                    <input className="filter-input" placeholder="Ej: DiCaprio" value={actores} onChange={(e) => setActores(e.target.value)} />
 
-                    {/* filtro por duración */}
                     <label className="filter-label">Duración</label>
                     <select className="filter-select" value={duracion} onChange={(e) => setDuracion(e.target.value)}>
                         <option value="">Todas</option>
-                        {duraciones.map(d => (
-                            <option key={d.value} value={d.value}>{d.label}</option>
-                        ))}
+                        {duraciones.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
                     </select>
-
                 </div>
             </aside>
 
-            {/* header */}
             <header className="header">
                 <div className="search-container">
                     <FiSearch className="search-icon" />
-                    <input
-                        className="search"
-                        placeholder="Buscar película..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                    <input className="search" placeholder="Buscar película..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                 </div>
-
                 <div className="header-actions">
-                    <div
-                        className="user-menu-wrapper"
-                        onClick={(e) => { e.stopPropagation(); setShowUserMenu(prev => !prev); }}
-                    >
+                    <div className="user-menu-wrapper" onClick={(e) => { e.stopPropagation(); setShowUserMenu(prev => !prev); }}>
                         <span className="user-trigger">
                             <FiUser />
                             {userName ? userName : "Mi cuenta"}
                         </span>
-
                         {showUserMenu && (
                             <div className="user-dropdown">
-                                <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/login"); }}>
-                                    Mi cuenta
-                                </div>
-                                <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-movies"); }}>
-                                    Mis películas
-                                </div>
-                                {isAdmin && (
-                                    <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/admin"); }}>
-                                        Panel Admin
-                                    </div>
+                                {userId ? (
+                                    <>
+                                        <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-account"); }}>Mi cuenta</div>
+                                        <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-movies"); }}>Mis películas</div>
+                                        {isAdmin && (
+                                            <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/admin"); }}>Panel Admin</div>
+                                        )}
+                                        <div className="user-dropdown-item logout" onClick={handleLogout}>Cerrar sesión</div>
+                                    </>
+                                ) : (
+                                    <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/login"); }}>Iniciar sesión</div>
                                 )}
-                                <div className="user-dropdown-item logout" onClick={handleLogout}>
-                                    Cerrar sesión
-                                </div>
                             </div>
                         )}
                     </div>
-
                     <span className="cart" onClick={() => navigate("/cart")}>
                         <div className="cart-wrapper">
                             <FiShoppingCart className="cart-icon" />
@@ -307,35 +274,17 @@ function Home() {
             </header>
 
             <main className="content">
-
                 <div className="section-header">
                     <h2 className="section-title">
                         {hasActiveFilters ? `Resultados (${movies.length})` : "LO MÁS VENDIDO"}
                     </h2>
                 </div>
 
-                {movies.length === 0 && (
-                    <p className="no-results">No se encontraron películas con estos filtros.</p>
-                )}
+                {movies.length === 0 && <p className="no-results">No se encontraron películas con estos filtros.</p>}
 
                 <div className="movies">
-                    {movies.slice(0, 9).map((movie) => (
-                        <div
-                            key={movie.id}
-                            className="movie"
-                            onClick={() => {
-                                const localData = moviesData.find(m => m.title.toLowerCase() === movie.movieTitle?.toLowerCase())
-                                setSelectedMovie({
-                                    ...movie,
-                                    genero: movie.genero || localData?.genres?.join(", ") || "",
-                                    director: movie.director || localData?.director || "",
-                                    duracion: movie.duracion || localData?.runtime || null,
-                                    actores: movie.actores || localData?.actors || "",
-                                    desc: movie.desc || localData?.plot || "",
-                                })
-                                setDias(1)
-                            }}
-                        >
+                    {movies.slice(0, hasActiveFilters ? movies.length : 9).map((movie) => (
+                        <div key={movie.id} className="movie" onClick={() => { setSelectedMovie(movie); setDias(1); }}>
                             <img
                                 src={posters[movie.movieTitle?.toLowerCase()] || movie.posterUrl || `https://via.placeholder.com/300x450/2a2a2a/f5a623?text=${encodeURIComponent(movie.movieTitle)}`}
                                 alt={movie.movieTitle}
@@ -348,12 +297,10 @@ function Home() {
                     ))}
                 </div>
 
-                {/* modal */}
                 {selectedMovie && (
                     <div className="modal-overlay" onClick={() => setSelectedMovie(null)}>
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                             <span className="modal-close" onClick={() => setSelectedMovie(null)}>✕</span>
-
                             <div className="modal-banner-container">
                                 <img
                                     src={posters[selectedMovie.movieTitle?.toLowerCase()] || selectedMovie.posterUrl || `https://via.placeholder.com/300x450/2a2a2a/f5a623?text=${encodeURIComponent(selectedMovie.movieTitle)}`}
@@ -362,7 +309,6 @@ function Home() {
                                 <div className="modal-gradient"></div>
                                 <h2 className="modal-title">{selectedMovie.movieTitle}</h2>
                             </div>
-
                             <div className="modal-info">
                                 <p><strong>Año:</strong> {selectedMovie.year}</p>
                                 {selectedMovie.director && <p><strong>Director:</strong> {selectedMovie.director}</p>}
@@ -370,7 +316,6 @@ function Home() {
                                 {selectedMovie.actores && <p><strong>Actores:</strong> {selectedMovie.actores}</p>}
                                 {selectedMovie.duracion && <p><strong>Duración:</strong> {selectedMovie.duracion} min</p>}
                                 {selectedMovie.desc && <p><strong>Sinopsis:</strong> {selectedMovie.desc}</p>}
-
                                 <div className="modal-dias">
                                     <label><strong>Días de alquiler:</strong></label>
                                     <div className="dias-selector">
@@ -379,21 +324,14 @@ function Home() {
                                         <button className="dias-btn" onClick={() => setDias(prev => Math.min(30, prev + 1))}>+</button>
                                     </div>
                                 </div>
-
                                 <p className="modal-price"><strong>Precio:</strong> {(dias * 2).toFixed(2)} €</p>
-
-                                <button className="modal-add-button" onClick={() => addToCart(selectedMovie)}>
-                                    Añadir a la cesta
-                                </button>
+                                <button className="modal-add-button" onClick={() => addToCart(selectedMovie)}>Añadir a la cesta</button>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {toast.show && (
-                    <div className={`toast ${toast.type}`}>{toast.message}</div>
-                )}
-
+                {toast.show && <div className={`toast ${toast.type}`}>{toast.message}</div>}
             </main>
         </div>
     );

@@ -1,17 +1,20 @@
 .register-container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #161616;
+    padding: 40px 0;
 }
 
 .register-box {
     position: relative;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    padding: 70px 160px;
+    padding: 60px 80px;
+    width: 620px;
+    max-width: 92%;
     background: #1e1e1e;
     border-radius: 16px;
     border: 1px solid #2a2a2a;
@@ -19,21 +22,77 @@
     animation: fadeIn 0.5s ease;
 }
 
+/* indicador de pasos */
+.register-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 36px;
+    width: 100%;
+}
+
+.register-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.register-step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid #333;
+    color: #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.register-step span {
+    font-size: 10px;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.register-step.active .register-step-circle {
+    border-color: #f5a623;
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.08);
+}
+
+.register-step.active span { color: #f5a623; }
+
+.register-step-line {
+    width: 50px;
+    height: 1px;
+    background: #2a2a2a;
+    margin: 0 12px;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+}
+
+/* formulario */
 .register-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 0;
     width: 100%;
-    max-width: 560px;
 }
 
 .register-content h1 {
     text-align: center;
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 900;
     letter-spacing: 6px;
-    margin: 0;
+    margin: 0 0 8px;
     background: linear-gradient(135deg, #f5a623 0%, #ffd07a 50%, #f5a623 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -42,21 +101,30 @@
 
 .register-subtitle {
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     color: #555;
+    margin: 0 0 28px;
     letter-spacing: 0.3px;
-    margin-top: -4px;
 }
 
 .form-row {
     display: flex;
     gap: 12px;
     width: 100%;
+    align-items: flex-start;
 }
 
-.form-row input {
+.form-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.form-field input {
     width: 100%;
-    padding: 14px 16px;
+    padding: 13px 16px;
     border-radius: 10px;
     font-size: 14px;
     background: #161616;
@@ -67,17 +135,33 @@
     letter-spacing: 0.3px;
 }
 
-.form-row input::placeholder { color: #444; }
-.form-row input:hover { border-color: #333; }
+.form-field input::placeholder { color: #3a3a3a; }
+.form-field input:hover { border-color: #333; }
 
-.form-row input:focus {
+.form-field input:focus {
     outline: none;
     border-color: #f5a623;
     box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.08);
 }
 
+.input-error { border-color: #e53935 !important; }
+
+.field-error {
+    font-size: 11px;
+    color: #e53935;
+    letter-spacing: 0.2px;
+    padding-left: 2px;
+}
+
+.register-error {
+    color: #e53935;
+    font-size: 13px;
+    margin: 0 0 16px;
+    text-align: center;
+}
+
 .register-content button {
-    margin-top: 10px;
+    margin-top: 8px;
     width: 100%;
     padding: 15px;
     background: #f5a623;
@@ -92,13 +176,10 @@
     transition: all 0.2s ease;
 }
 
-.register-content button:hover {
-    background: #ffb84d;
-    transform: translateY(-1px);
-}
-
+.register-content button:hover { background: #ffb84d; transform: translateY(-1px); }
 .register-content button:active { transform: scale(0.98); }
 
+/* botón volver */
 .back-button {
     position: absolute;
     top: 22px;
@@ -107,13 +188,39 @@
 }
 
 .back-button svg {
-    font-size: 26px;
+    font-size: 24px;
     color: #444;
     stroke-width: 2;
     transition: color 0.2s ease;
 }
 
 .back-button:hover svg { color: #f5a623; }
+
+/* preview tarjeta */
+.card-preview {
+    width: 100%;
+    background: linear-gradient(135deg, #252525, #1e1e1e);
+    border: 1px solid #2e2e2e;
+    border-radius: 14px;
+    padding: 28px 28px 22px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.card-preview-number {
+    font-family: monospace;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: #888;
+    margin-bottom: 16px;
+}
+
+.card-preview-label {
+    font-size: 10px;
+    color: #3a3a3a;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(16px); }
