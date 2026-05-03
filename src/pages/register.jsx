@@ -5,10 +5,11 @@ import { FiArrowLeft } from "react-icons/fi"
 import "./register.css"
 
 function Register() {
+    // paso activo: 1 = datos personales, 2 = datos de pago
     const [step, setStep] = useState(1)
     const navigate = useNavigate()
 
-    // paso 1
+    // campos del paso 1
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [dni, setDni] = useState("")
@@ -17,11 +18,13 @@ function Register() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    // paso 2
+    // campos del paso 2
     const [cardNumber, setCardNumber] = useState("")
 
+    // errores de validación
     const [errors, setErrors] = useState({})
 
+    // valida los campos del paso 1 antes de avanzar
     function validateStep1() {
         const newErrors = {}
         if (!/^\d{8}[A-Za-z]$/.test(dni)) newErrors.dni = "Formato inválido (ej: 12345678A)"
@@ -31,6 +34,7 @@ function Register() {
         return Object.keys(newErrors).length === 0
     }
 
+    // valida la tarjeta del paso 2 antes de registrar
     function validateStep2() {
         const newErrors = {}
         if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ""))) newErrors.cardNumber = "Debe tener 16 dígitos"
@@ -38,11 +42,13 @@ function Register() {
         return Object.keys(newErrors).length === 0
     }
 
+    // avanza al paso 2 si el paso 1 es válido
     function handleNextStep(e) {
         e.preventDefault()
         if (validateStep1()) setStep(2)
     }
 
+    // envía el registro al backend con todos los datos
     async function handleSubmit(e) {
         e.preventDefault()
         if (!validateStep2()) return
@@ -51,6 +57,7 @@ function Register() {
             await register({ firstName, lastName, dni, phone, address, cardNumber, email, password })
             navigate("/register-success")
         } catch (err) {
+            // muestra mensajes de error amigables según el tipo de fallo
             const msg = err.message || ""
             if (msg.includes("ya existe") || msg.includes("email")) {
                 setErrors({ general: "Este email ya está registrado." })
@@ -62,11 +69,15 @@ function Register() {
         }
     }
 
+    // solo permite 16 dígitos en la tarjeta
     const handleCardNumber = (e) => setCardNumber(e.target.value.replace(/\D/g, "").substring(0, 16))
+
+    // solo permite 9 dígitos en el teléfono
     const handlePhone = (e) => setPhone(e.target.value.replace(/\D/g, "").substring(0, 9))
+
+    // DNI: primeros 8 caracteres solo números, el 9º solo letra mayúscula
     const handleDni = (e) => {
         let value = e.target.value.toUpperCase()
-        // primeros 8 caracteres solo números, el 9º solo letra
         let numbers = value.replace(/[^0-9]/g, "").substring(0, 8)
         let letter = value.replace(/[^A-Z]/g, "").substring(0, 1)
         if (value.length <= 8) {
@@ -80,11 +91,12 @@ function Register() {
         <div className="register-container">
             <div className="register-box">
 
+                {/* botón volver: al paso anterior o al login si es el paso 1 */}
                 <div className="back-button" onClick={() => step === 1 ? navigate("/login") : setStep(1)}>
                     <FiArrowLeft />
                 </div>
 
-                {/* indicador de pasos */}
+                {/* indicador visual de pasos */}
                 <div className="register-steps">
                     <div className={`register-step ${step >= 1 ? "active" : ""}`}>
                         <div className="register-step-circle">1</div>
@@ -97,7 +109,7 @@ function Register() {
                     </div>
                 </div>
 
-                {/* paso 1 */}
+                {/* paso 1: datos personales */}
                 {step === 1 && (
                     <form className="register-content" onSubmit={handleNextStep}>
                         <h1>Regístrate</h1>
@@ -143,12 +155,13 @@ function Register() {
                     </form>
                 )}
 
-                {/* paso 2 */}
+                {/* paso 2: tarjeta bancaria con preview en tiempo real */}
                 {step === 2 && (
                     <form className="register-content" onSubmit={handleSubmit}>
                         <h1>Datos de pago</h1>
                         <p className="register-subtitle">Introduce tu tarjeta bancaria</p>
 
+                        {/* preview visual de la tarjeta: muestra los dígitos agrupados de 4 en 4 */}
                         <div className="card-preview">
                             <div className="card-preview-number">
                                 {cardNumber
@@ -172,6 +185,7 @@ function Register() {
                             </div>
                         </div>
 
+                        {/* error general del backend */}
                         {errors.general && <p className="register-error">{errors.general}</p>}
 
                         <button type="submit">Crear cuenta</button>

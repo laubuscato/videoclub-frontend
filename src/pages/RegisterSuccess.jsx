@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import "./registerSuccess.css"
 
+// pantalla de confirmación que se muestra tras completar el registro
 function RegisterSuccess() {
     const navigate = useNavigate()
 
@@ -8,7 +9,7 @@ function RegisterSuccess() {
         <div className="regsuccess-container">
             <div className="regsuccess-box">
 
-                {/* icono */}
+                {/* icono de confirmación */}
                 <div className="regsuccess-icon">✓</div>
 
                 {/* título */}

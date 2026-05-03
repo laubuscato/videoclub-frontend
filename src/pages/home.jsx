@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { getMovies, getMe } from "../services/api";
 import { movies as moviesData } from "../data/movies.js";
 
+// mapa de géneros en español → equivalentes en inglés para filtrar el catálogo
 const genreTranslations = {
     "acción": ["action"],
     "comedia": ["comedy"],
@@ -23,6 +24,7 @@ const genreTranslations = {
     "misterio": ["mystery"]
 };
 
+// mapa de título en minúsculas → url del poster (fuera del componente para evitar warnings)
 const posters = Object.fromEntries(
     moviesData.map(movie => [movie.title.toLowerCase(), movie.posterUrl])
 );
@@ -30,28 +32,37 @@ const posters = Object.fromEntries(
 function Home() {
     const navigate = useNavigate();
 
+    // película seleccionada para el modal
     const [selectedMovie, setSelectedMovie] = useState(null);
+    // lista completa de películas del backend
     const [allMovies, setAllMovies] = useState([]);
+    // número de películas en el carrito (para el badge)
     const [cartCount, setCartCount] = useState(0);
+    // notificación temporal
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+    // texto del buscador
     const [searchTerm, setSearchTerm] = useState("");
+    // datos del usuario logueado
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
+    // visibilidad del dropdown de usuario
     const [showUserMenu, setShowUserMenu] = useState(false);
+    // días de alquiler seleccionados en el modal
     const [dias, setDias] = useState(1);
+    // película destacada en el hero banner
     const [heroMovie, setHeroMovie] = useState(null);
 
+    // valores de los filtros del sidebar
     const [year, setYear] = useState("");
     const [genre, setGenre] = useState("");
     const [director, setDirector] = useState("");
     const [actores, setActores] = useState("");
     const [duracion, setDuracion] = useState("");
 
+    // genera los últimos 100 años para el selector de año
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-
-
 
     const genres = [
         "Acción", "Comedia", "Drama", "Terror", "Ciencia ficción",
@@ -65,12 +76,13 @@ function Home() {
         { label: "Más de 120 min", value: "long" }
     ];
 
+    // carga películas y usuario al montar el componente
     useEffect(() => {
         const loadMovies = async () => {
             try {
                 const data = await getMovies();
                 setAllMovies(data);
-                // película destacada: la primera con poster
+                // la primera película con poster disponible se usa como hero
                 const withPoster = data.find(m => posters[m.movieTitle?.toLowerCase()] || m.posterUrl);
                 if (withPoster) {
                     const localData = moviesData.find(m => m.title.toLowerCase() === withPoster.movieTitle?.toLowerCase())
@@ -94,6 +106,7 @@ function Home() {
                 setUserName(user.firstName);
                 setUserId(user.id);
                 setIsAdmin(user.role === "ADMIN");
+                // carga el contador del carrito desde localStorage
                 const cart = JSON.parse(localStorage.getItem(`cart_${user.id}`)) || [];
                 setCartCount(cart.length);
             } catch (error) {
@@ -105,6 +118,7 @@ function Home() {
         loadUser();
     }, []);
 
+    // escucha el evento cartUpdated para actualizar el badge del carrito en tiempo real
     useEffect(() => {
         if (!userId) return;
         const updateCart = () => {
@@ -115,7 +129,9 @@ function Home() {
         return () => window.removeEventListener("cartUpdated", updateCart);
     }, [userId]);
 
+    // aplica todos los filtros activos de forma reactiva
     const movies = useMemo(() => {
+        // enriquece cada película con datos locales si el backend no los tiene
         let filtered = allMovies.map(movie => {
             const localData = moviesData.find(m => m.title.toLowerCase() === movie.movieTitle?.toLowerCase())
             return {
@@ -134,6 +150,8 @@ function Home() {
             )
         }
         if (year) filtered = filtered.filter(m => String(m.year) === year)
+
+        // filtro por género: busca en español y en inglés usando el mapa de traducciones
         if (genre) {
             const genreLower = genre.toLowerCase()
             const translations = genreTranslations[genreLower] || []
@@ -145,6 +163,8 @@ function Home() {
         }
         if (director) filtered = filtered.filter(m => m.director?.toLowerCase().includes(director.toLowerCase()))
         if (actores) filtered = filtered.filter(m => m.actores?.toLowerCase().includes(actores.toLowerCase()))
+
+        // filtro por duración en tres rangos
         if (duracion === "short") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) < 90)
         else if (duracion === "medium") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) >= 90 && parseInt(m.duracion) <= 120)
         else if (duracion === "long") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) > 120)
@@ -152,12 +172,15 @@ function Home() {
         return filtered
     }, [searchTerm, year, genre, director, actores, duracion, allMovies])
 
+    // resetea todos los filtros y el buscador
     const resetFilters = () => {
         setYear(""); setGenre(""); setDirector(""); setActores(""); setDuracion(""); setSearchTerm("")
     }
 
+    // true si hay algún filtro activo
     const hasActiveFilters = year || genre || director || actores || duracion || searchTerm
 
+    // añade una película al carrito en localStorage
     const addToCart = (movie) => {
         if (!userId) return;
         const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
@@ -177,17 +200,20 @@ function Home() {
         setTimeout(() => setToast({ show: false, message: "", type: "success" }), 2000);
     };
 
+    // cierra sesión y limpia el estado local
     const handleLogout = () => {
         localStorage.removeItem("token");
         setUserName(""); setCartCount(0); setIsAdmin(false); setUserId(null); setShowUserMenu(false);
         navigate("/login");
     };
 
+    // poster del hero: primero busca en data local, luego usa la url del backend
     const heroPoster = heroMovie ? (posters[heroMovie.movieTitle?.toLowerCase()] || heroMovie.posterUrl) : null;
 
     return (
         <div className="home" onClick={() => setShowUserMenu(false)}>
 
+            {/* sidebar con logo y filtros */}
             <aside className="sidebar">
                 <div className="logo-wrapper">
                     <div className="logo">LUMI</div>
@@ -233,13 +259,14 @@ function Home() {
 
             <div className="main-area">
 
-                {/* header */}
+                {/* header con buscador, usuario y carrito */}
                 <header className="header">
                     <div className="search-container">
                         <FiSearch className="search-icon" />
                         <input className="search" placeholder="Buscar película..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     </div>
                     <div className="header-actions">
+                        {/* dropdown de usuario: opciones distintas según si hay sesión activa */}
                         <div className="user-menu-wrapper" onClick={(e) => { e.stopPropagation(); setShowUserMenu(prev => !prev); }}>
                             <span className="user-trigger">
                                 <FiUser />
@@ -251,6 +278,7 @@ function Home() {
                                         <>
                                             <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-account"); }}>Mi cuenta</div>
                                             <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/my-movies"); }}>Mis películas</div>
+                                            {/* panel admin solo visible para usuarios con rol ADMIN */}
                                             {isAdmin && (
                                                 <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); navigate("/admin"); }}>Panel Admin</div>
                                             )}
@@ -272,7 +300,7 @@ function Home() {
                     </div>
                 </header>
 
-                {/* hero banner */}
+                {/* hero banner: solo visible cuando no hay filtros activos */}
                 {!hasActiveFilters && heroMovie && (
                     <div className="hero" style={{ backgroundImage: heroPoster ? `url(${heroPoster})` : "none" }}>
                         <div className="hero-overlay"></div>
@@ -294,9 +322,10 @@ function Home() {
                     </div>
                 )}
 
-                {/* contenido */}
+                {/* catálogo de películas */}
                 <main className="content">
                     <div className="section-header">
+                        {/* título dinámico según si hay filtros activos */}
                         <h2 className="section-title">
                             {hasActiveFilters ? `Resultados (${movies.length})` : "LO MÁS VENDIDO"}
                         </h2>
@@ -304,6 +333,7 @@ function Home() {
 
                     {movies.length === 0 && <p className="no-results">No se encontraron películas con estos filtros.</p>}
 
+                    {/* sin filtros muestra 9 películas, con filtros muestra todas las que coincidan */}
                     <div className="movies">
                         {movies.slice(0, hasActiveFilters ? movies.length : 9).map((movie) => (
                             <div key={movie.id} className="movie" onClick={() => { setSelectedMovie(movie); setDias(1); }}>
@@ -315,6 +345,7 @@ function Home() {
                                     <h3>{movie.movieTitle}</h3>
                                     <p>{movie.year}{movie.genero ? ` · ${movie.genero}` : ""}</p>
                                 </div>
+                                {/* hover overlay con precio y botón de alquilar */}
                                 <div className="movie-hover">
                                     <p className="movie-hover-price">2€ / día</p>
                                     <button className="movie-hover-btn">Alquilar</button>
@@ -325,7 +356,7 @@ function Home() {
                 </main>
             </div>
 
-            {/* modal */}
+            {/* modal de detalle de película */}
             {selectedMovie && (
                 <div className="modal-overlay" onClick={() => setSelectedMovie(null)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -345,6 +376,8 @@ function Home() {
                             {selectedMovie.actores && <p><strong>Actores:</strong> {selectedMovie.actores}</p>}
                             {selectedMovie.duracion && <p><strong>Duración:</strong> {selectedMovie.duracion} min</p>}
                             {selectedMovie.desc && <p><strong>Sinopsis:</strong> {selectedMovie.desc}</p>}
+
+                            {/* selector de días: mínimo 1, máximo 30 */}
                             <div className="modal-dias">
                                 <label><strong>Días de alquiler:</strong></label>
                                 <div className="dias-selector">
@@ -360,6 +393,7 @@ function Home() {
                 </div>
             )}
 
+            {/* toast de notificación */}
             {toast.show && <div className={`toast ${toast.type}`}>{toast.message}</div>}
         </div>
     );

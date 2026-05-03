@@ -11,7 +11,7 @@ function Cart() {
     const [cartItems, setCartItems] = useState([])
     const [userId, setUserId] = useState(null)
 
-    // mapa de título en minúsculas → url del poster
+    // mapa de título en minúsculas → url del poster (desde data local)
     const posters = Object.fromEntries(
         moviesData.map(movie => [movie.title.toLowerCase(), movie.posterUrl])
     )
@@ -22,6 +22,7 @@ function Cart() {
             try {
                 const user = await getMe()
                 setUserId(user.id)
+                // el carrito se guarda por usuario para evitar mezclas entre sesiones
                 const cart = JSON.parse(localStorage.getItem(`cart_${user.id}`)) || []
                 setCartItems(cart)
             } catch (error) {
@@ -31,11 +32,12 @@ function Cart() {
         loadUser()
     }, [])
 
-    // elimina una película del carrito por id
+    // elimina una película del carrito por id y actualiza localStorage
     const removeFromCart = (id) => {
         const updated = cartItems.filter(movie => movie.id !== id)
         setCartItems(updated)
         localStorage.setItem(`cart_${userId}`, JSON.stringify(updated))
+        // notifica al header para actualizar el badge del carrito
         window.dispatchEvent(new Event("cartUpdated"))
     }
 
@@ -46,7 +48,7 @@ function Cart() {
         window.dispatchEvent(new Event("cartUpdated"))
     }
 
-    // actualiza los días de alquiler y recalcula el precio
+    // actualiza los días de alquiler de una película y recalcula el precio (2€/día)
     const updateDias = (id, newDias) => {
         const updated = cartItems.map(movie =>
             movie.id === id
@@ -57,12 +59,11 @@ function Cart() {
         localStorage.setItem(`cart_${userId}`, JSON.stringify(updated))
     }
 
-    // suma total de todos los precios
+    // suma total de todos los precios del carrito
     const totalPrice = cartItems.reduce((acc, movie) => acc + parseFloat(movie.price || 0), 0)
 
     return (
         <div className="cart-container">
-
             <div className="cart-box">
 
                 {/* botón volver al home */}
@@ -83,20 +84,13 @@ function Cart() {
 
                     {cartItems.length > 0 && (
                         <>
-                            {/* cabecera con total y botón vaciar */}
+                            {/* cabecera con contador y botón vaciar */}
                             <div className="cart-footer">
-                                <p className="cart-total">
-                                    Total de películas: {cartItems.length}
-                                </p>
-                                <button
-                                    className="cart-clear"
-                                    onClick={clearCart}
-                                >
-                                    Vaciar carrito
-                                </button>
+                                <p className="cart-total">Total de películas: {cartItems.length}</p>
+                                <button className="cart-clear" onClick={clearCart}>Vaciar carrito</button>
                             </div>
 
-                            {/* lista de películas */}
+                            {/* lista de películas del carrito */}
                             <div className="cart-list">
                                 {cartItems.map((movie) => {
                                     const poster = posters[movie.title?.toLowerCase()]
@@ -111,43 +105,21 @@ function Cart() {
                                             />
 
                                             <div className="cart-movie-info">
+                                                <h3 className="cart-movie-title">{movie.title}</h3>
 
-                                                {/* título */}
-                                                <h3 className="cart-movie-title">
-                                                    {movie.title}
-                                                </h3>
-
-                                                {/* selector de días */}
+                                                {/* selector de días: mínimo 1, máximo 30 */}
                                                 <div className="cart-dias-selector">
-                                                    <button
-                                                        className="cart-dias-btn"
-                                                        onClick={() => updateDias(movie.id, Math.max(1, movie.dias - 1))}
-                                                    >
-                                                        −
-                                                    </button>
-                                                    <span className="cart-dias-count">
-                                                        {movie.dias} {movie.dias === 1 ? "día" : "días"}
-                                                    </span>
-                                                    <button
-                                                        className="cart-dias-btn"
-                                                        onClick={() => updateDias(movie.id, Math.min(30, movie.dias + 1))}
-                                                    >
-                                                        +
-                                                    </button>
+                                                    <button className="cart-dias-btn" onClick={() => updateDias(movie.id, Math.max(1, movie.dias - 1))}>−</button>
+                                                    <span className="cart-dias-count">{movie.dias} {movie.dias === 1 ? "día" : "días"}</span>
+                                                    <button className="cart-dias-btn" onClick={() => updateDias(movie.id, Math.min(30, movie.dias + 1))}>+</button>
                                                 </div>
 
-                                                {/* precio calculado por días */}
-                                                <p className="cart-movie-price">
-                                                    {parseFloat(movie.price).toFixed(2)} €
-                                                </p>
-
+                                                {/* precio calculado: días × 2€ */}
+                                                <p className="cart-movie-price">{parseFloat(movie.price).toFixed(2)} €</p>
                                             </div>
 
-                                            {/* botón eliminar */}
-                                            <button
-                                                className="cart-remove"
-                                                onClick={() => removeFromCart(movie.id)}
-                                            >
+                                            {/* botón eliminar película del carrito */}
+                                            <button className="cart-remove" onClick={() => removeFromCart(movie.id)}>
                                                 Eliminar
                                             </button>
 
@@ -160,24 +132,17 @@ function Cart() {
 
                 </div>
 
-                {/* precio total y botón pagar */}
+                {/* total y botón proceder al pago */}
                 {cartItems.length > 0 && (
                     <>
-                        <p className="cart-price bottom">
-                            Total: {totalPrice.toFixed(2)} €
-                        </p>
-
-                        <button
-                            className="checkout-button"
-                            onClick={() => navigate("/checkout")}
-                        >
+                        <p className="cart-price bottom">Total: {totalPrice.toFixed(2)} €</p>
+                        <button className="checkout-button" onClick={() => navigate("/checkout")}>
                             Proceder a pagar
                         </button>
                     </>
                 )}
 
             </div>
-
         </div>
     )
 }

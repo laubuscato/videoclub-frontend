@@ -29,7 +29,7 @@ function Admin() {
     const [toast, setToast] = useState({ show: false, message: "", type: "success" })
     const [loading, setLoading] = useState(true)
 
-    // cargar usuarios y películas al montar
+    // carga usuarios y películas en paralelo al montar el componente
     useEffect(() => {
         loadData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,16 +48,18 @@ function Admin() {
         }
     }
 
+    // muestra un toast de notificación y lo oculta tras 2.5s
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type })
         setTimeout(() => setToast({ show: false, message: "", type: "success" }), 2500)
     }
 
-    // elimina un usuario tras confirmación
+    // elimina un usuario tras confirmación del administrador
     const handleDeleteUser = async (id) => {
         if (!window.confirm("¿Seguro que quieres eliminar este usuario?")) return
         try {
             await deleteUser(id)
+            // actualiza la lista local sin recargar desde el backend
             setUsers(prev => prev.filter(u => u.id !== id))
             setSelectedUser(null)
             setUserRentals([])
@@ -67,7 +69,7 @@ function Admin() {
         }
     }
 
-    // carga el detalle y el historial de alquileres de un usuario
+    // carga el detalle y el historial de alquileres de un usuario al hacer click
     const handleSelectUser = async (id) => {
         try {
             const detail = await getUserDetail(id)
@@ -78,6 +80,7 @@ function Admin() {
                 const rentals = await getUserRentals(id)
                 setUserRentals(rentals)
             } catch {
+                // si el endpoint no existe aún, no mostramos error
                 setUserRentals([])
             } finally {
                 setLoadingRentals(false)
@@ -87,7 +90,7 @@ function Admin() {
         }
     }
 
-    // crea una nueva película
+    // crea una nueva película con los datos del formulario
     const handleCreateMovie = async () => {
         try {
             await createMovie({
@@ -108,7 +111,7 @@ function Admin() {
         }
     }
 
-    // actualiza una película existente
+    // actualiza los datos de una película existente
     const handleUpdateMovie = async () => {
         try {
             await updateMovie({
@@ -130,7 +133,7 @@ function Admin() {
         }
     }
 
-    // elimina una película tras confirmación
+    // elimina una película del catálogo tras confirmación
     const handleDeleteMovie = async (id) => {
         if (!window.confirm("¿Seguro que quieres eliminar esta película?")) return
         try {
@@ -142,6 +145,7 @@ function Admin() {
         }
     }
 
+    // abre el formulario en modo edición con los datos de la película seleccionada
     const openEditMovie = (movie) => {
         setEditingMovie(movie)
         setMovieForm({
@@ -157,22 +161,26 @@ function Admin() {
         setShowMovieForm(true)
     }
 
+    // abre el formulario en modo creación con campos vacíos
     const openCreateMovie = () => {
         setEditingMovie(null)
         resetMovieForm()
         setShowMovieForm(true)
     }
 
+    // resetea y cierra el formulario de película
     const resetMovieForm = () => {
         setMovieForm({ movieTitle: "", desc: "", year: "", director: "", genero: "", actores: "", duracion: "", posterUrl: "" })
         setShowMovieForm(false)
         setEditingMovie(null)
     }
 
+    // filtra usuarios por nombre, apellido o email
     const filteredUsers = users.filter(u =>
         `${u.firstName} ${u.lastName} ${u.email}`.toLowerCase().includes(userSearch.toLowerCase())
     )
 
+    // filtra películas por título
     const filteredMovies = movies.filter(m =>
         m.movieTitle.toLowerCase().includes(movieSearch.toLowerCase())
     )
@@ -182,12 +190,14 @@ function Admin() {
 
             <div className="admin-box">
 
+                {/* botón volver al home */}
                 <div className="back-button" onClick={() => navigate("/")}>
                     <FiArrowLeft />
                 </div>
 
                 <h1 className="admin-title">Panel de Administración</h1>
 
+                {/* pestañas de navegación */}
                 <div className="admin-tabs">
                     <button
                         className={`admin-tab ${tab === "usuarios" ? "active" : ""}`}
@@ -209,6 +219,7 @@ function Admin() {
                 {!loading && tab === "usuarios" && (
                     <div className="admin-layout">
 
+                        {/* columna izquierda: lista de usuarios */}
                         <div className="admin-list">
                             <div className="admin-search-wrapper">
                                 <FiSearch className="admin-search-icon" />
@@ -234,6 +245,7 @@ function Admin() {
                                         <p className="admin-item-name">{user.firstName} {user.lastName}</p>
                                         <p className="admin-item-sub">{user.email}</p>
                                     </div>
+                                    {/* stopPropagation evita que se seleccione el usuario al eliminar */}
                                     <button
                                         className="admin-delete-btn"
                                         onClick={(e) => { e.stopPropagation(); handleDeleteUser(user.id) }}
@@ -244,7 +256,7 @@ function Admin() {
                             ))}
                         </div>
 
-                        {/* detalle del usuario */}
+                        {/* columna derecha: detalle del usuario seleccionado */}
                         <div className="admin-detail">
                             {!selectedUser && (
                                 <p className="admin-empty">Selecciona un usuario para ver su detalle.</p>
@@ -269,7 +281,7 @@ function Admin() {
                                         <span className="admin-detail-value">{selectedUser.isEmailVerified ? "✓ Sí" : "✗ No"}</span>
                                     </div>
 
-                                    {/* historial de alquileres */}
+                                    {/* historial de alquileres del usuario seleccionado */}
                                     <div className="admin-rentals-section">
                                         <h3 className="admin-rentals-title">
                                             <FiClock /> Historial de alquileres
@@ -305,6 +317,7 @@ function Admin() {
                                         )}
                                     </div>
 
+                                    {/* botón eliminar usuario desde el panel de detalle */}
                                     <button
                                         className="admin-delete-full-btn"
                                         onClick={() => handleDeleteUser(selectedUser.id)}
@@ -329,6 +342,7 @@ function Admin() {
                             </button>
                         </div>
 
+                        {/* buscador de películas */}
                         <div className="admin-search-wrapper">
                             <FiSearch className="admin-search-icon" />
                             <input
@@ -339,7 +353,7 @@ function Admin() {
                             />
                         </div>
 
-                        {/* formulario solo para crear nueva película */}
+                        {/* formulario de creación — solo visible cuando no se está editando */}
                         {showMovieForm && !editingMovie && (
                             <div className="admin-form">
                                 <h3 className="admin-form-title">Nueva película</h3>
@@ -388,7 +402,7 @@ function Admin() {
                                         </div>
                                     </div>
 
-                                    {/* formulario de edición inline, debajo de la película */}
+                                    {/* formulario de edición inline — aparece debajo de la película seleccionada */}
                                     {editingMovie?.id === movie.id && (
                                         <div className="admin-form admin-form-inline">
                                             <h3 className="admin-form-title">Editar película</h3>
@@ -421,6 +435,7 @@ function Admin() {
 
             </div>
 
+            {/* toast de notificación */}
             {toast.show && (
                 <div className={`admin-toast ${toast.type}`}>{toast.message}</div>
             )}
