@@ -1,7 +1,6 @@
 .home {
   display: grid;
   grid-template-columns: 230px 1fr;
-  min-height: 100vh;
   background: #161616;
   color: white;
   font-family: 'Nunito', sans-serif;
@@ -132,7 +131,6 @@
 .main-area {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
 }
 
 /* header */
