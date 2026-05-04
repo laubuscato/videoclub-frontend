@@ -249,7 +249,7 @@ function Home() {
             {/* sidebar con logo y filtros */}
             <aside className="sidebar">
                 <div className="logo-wrapper">
-                    <div className="logo">LUMI</div>
+                    <div className="logo">CINE RENT</div>
                     <div className="logo-sub">Videoclub</div>
                 </div>
                 <div className="sidebar-divider"></div>
@@ -285,10 +285,10 @@ function Home() {
                     </select>
 
                     <label className="filter-label">Director</label>
-                    <input className="filter-input" placeholder="Ej: Tim Burton" value={director} onChange={(e) => setDirector(e.target.value)} />
+                    <input className="filter-input" placeholder="Ej: Nolan" value={director} onChange={(e) => setDirector(e.target.value)} />
 
                     <label className="filter-label">Actores</label>
-                    <input className="filter-input" placeholder="Ej: Brad Pitt" value={actores} onChange={(e) => setActores(e.target.value)} />
+                    <input className="filter-input" placeholder="Ej: DiCaprio" value={actores} onChange={(e) => setActores(e.target.value)} />
 
                     <label className="filter-label">Duración</label>
                     <select className="filter-select" value={duracion} onChange={(e) => setDuracion(e.target.value)}>
