@@ -1,5 +1,5 @@
 // url base del backend
-const API_URL = "http://localhost:4000/api"
+const API_URL = "https://backend-fp-qnso.onrender.com/api"
 
 
 // login con email y contraseña
