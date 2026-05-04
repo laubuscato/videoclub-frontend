@@ -8,7 +8,7 @@ function Checkout() {
 
     const navigate = useNavigate()
 
-    // estado del formulario
+    // campos del formulario de pago
     const [cardNumber, setCardNumber] = useState("")
     const [expiry, setExpiry] = useState("")
     const [cvv, setCvv] = useState("")
@@ -40,38 +40,27 @@ function Checkout() {
     // suma total del carrito
     const total = cart.reduce((acc, item) => acc + parseFloat(item.price || 0), 0)
 
-    // formatea el número de tarjeta en grupos de 4
+    // formatea el número de tarjeta en grupos de 4 dígitos
     const handleCardNumber = (e) => {
-        let value = e.target.value.replace(/\D/g, "")
-        value = value.substring(0, 16)
+        let value = e.target.value.replace(/\D/g, "").substring(0, 16)
         const formatted = value.match(/.{1,4}/g)?.join(" ") || ""
         setCardNumber(formatted)
     }
 
-    // formatea la fecha como MM/AA
+    // formatea la fecha de caducidad como MM/AA
     const handleExpiry = (e) => {
-        let value = e.target.value.replace(/\D/g, "")
-        value = value.substring(0, 4)
-        if (value.length >= 3) {
-            value = value.slice(0, 2) + "/" + value.slice(2)
-        }
+        let value = e.target.value.replace(/\D/g, "").substring(0, 4)
+        if (value.length >= 3) value = value.slice(0, 2) + "/" + value.slice(2)
         setExpiry(value)
     }
 
-    // solo permite números, máximo 3 dígitos
-    const handleCvv = (e) => {
-        let value = e.target.value.replace(/\D/g, "")
-        value = value.substring(0, 3)
-        setCvv(value)
-    }
+    // solo permite números, máximo 3 dígitos para el CVV
+    const handleCvv = (e) => setCvv(e.target.value.replace(/\D/g, "").substring(0, 3))
 
-    // solo permite letras y espacios
-    const handleName = (e) => {
-        let value = e.target.value.replace(/[^a-zA-Z\s]/g, "")
-        setName(value)
-    }
+    // solo permite letras y espacios para el titular
+    const handleName = (e) => setName(e.target.value.replace(/[^a-zA-Z\s]/g, ""))
 
-    // procesa el pago: llama al backend para alquilar cada película
+    // procesa el pago: registra cada película en el backend y limpia el carrito
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -96,7 +85,7 @@ function Checkout() {
                         dias: movie.dias
                     })
 
-                    // guarda el id real del producto devuelto por el backend
+                    // guarda el id real del alquiler devuelto por el backend
                     newMovies.push({
                         id: res.alquiler.id,
                         movieTitle: movie.title,
@@ -106,20 +95,18 @@ function Checkout() {
                         returnedAt: null
                     })
                 } catch (err) {
-                    // si ya estaba alquilada la omite
+                    // si la película ya estaba alquilada, la omite silenciosamente
                     console.log("SKIP:", movie.title, err.message)
                 }
             }
 
-            // combina las películas nuevas con las ya compradas sin duplicados
+            // combina las nuevas compras con las anteriores evitando duplicados
             const merged = [...existing]
             newMovies.forEach(m => {
-                if (!merged.find(e => e.id === m.id)) {
-                    merged.push(m)
-                }
+                if (!merged.find(e => e.id === m.id)) merged.push(m)
             })
 
-            // guarda en localStorage y vacía el carrito
+            // persiste el historial y vacía el carrito
             localStorage.setItem(`purchasedMovies_${userId}`, JSON.stringify(merged))
             localStorage.removeItem(`cart_${userId}`)
             window.dispatchEvent(new Event("cartUpdated"))
@@ -135,7 +122,6 @@ function Checkout() {
 
     return (
         <div className="checkout-container">
-
             <div className="checkout-box">
 
                 {/* botón volver al carrito */}
@@ -147,10 +133,10 @@ function Checkout() {
 
                 <div className="checkout-layout">
 
-                    {/* columna izquierda: formulario */}
+                    {/* columna izquierda: formulario de pago */}
                     <div className="checkout-left">
 
-                        {/* métodos de pago aceptados */}
+                        {/* iconos de métodos de pago aceptados */}
                         <div className="payment-method">
                             <span>Tarjeta</span>
                             <div className="card-icons">
@@ -162,18 +148,12 @@ function Checkout() {
 
                         <form className="checkout-form" onSubmit={handleSubmit} noValidate>
 
-                            {/* número de tarjeta */}
                             <div className="field">
                                 <label>Número de tarjeta</label>
-                                <input
-                                    value={cardNumber}
-                                    onChange={handleCardNumber}
-                                    placeholder="1234 5678 9012 3456"
-                                    required
-                                />
+                                <input value={cardNumber} onChange={handleCardNumber} placeholder="1234 5678 9012 3456" required />
                             </div>
 
-                            {/* fecha y cvv en la misma fila */}
+                            {/* fecha y CVV en la misma fila */}
                             <div className="row">
                                 <div className="field">
                                     <label>Fecha</label>
@@ -185,50 +165,44 @@ function Checkout() {
                                 </div>
                             </div>
 
-                            {/* titular de la tarjeta */}
                             <div className="field">
                                 <label>Titular</label>
                                 <input value={name} onChange={handleName} placeholder="Nombre completo" required />
                             </div>
 
-                            {/* mensaje de error si falla el pago */}
+                            {/* error de pago */}
                             {error && <p className="checkout-error">{error}</p>}
 
-                            {/* botón pagar, deshabilitado mientras procesa */}
+                            {/* botón deshabilitado mientras procesa */}
                             <button type="submit" className="pay-button" disabled={paying}>
                                 {paying ? "Procesando..." : "Pagar ahora"}
                             </button>
 
                         </form>
-
                     </div>
 
                     {/* columna derecha: resumen del pedido */}
                     <div className="checkout-summary">
-
                         <h2>Resumen</h2>
 
-                        {/* lista de películas con días y precio */}
+                        {/* desglose por película */}
                         {cart.map((movie, index) => (
                             <div key={index} className="summary-item">
                                 <span>{movie.title}</span>
-                                <span className="summary-dias">{movie.dias} {movie.dias === 1 ? "día" : "días"}</span>
+                                <span>{movie.dias} {movie.dias === 1 ? "día" : "días"}</span>
                                 <span>{parseFloat(movie.price).toFixed(2)} €</span>
                             </div>
                         ))}
 
-                        {/* total */}
+                        {/* total final */}
                         <div className="summary-total">
                             <span>Total</span>
                             <span>{total.toFixed(2)} €</span>
                         </div>
-
                     </div>
 
                 </div>
-
             </div>
-
         </div>
     )
 }

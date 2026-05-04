@@ -4,13 +4,13 @@ import { movies } from "../data/movies"
 
 function MovieDetail() {
 
-    // obtiene el id de la URL
+    // obtiene el id de la URL (ej: /movie/5 → id = "5")
     const { id } = useParams()
 
-    // busca la película por id
+    // busca la película en los datos locales por id numérico
     const movie = movies.find((movie) => movie.id === Number(id))
 
-    // si no existe muestra un mensaje de error
+    // si no existe muestra un mensaje de error con enlace al home
     if (!movie) {
         return (
             <div>
@@ -35,7 +35,7 @@ function MovieDetail() {
                     className="movie-detail-poster"
                 />
 
-                {/* información de la película */}
+                {/* información detallada de la película */}
                 <div className="movie-detail-info">
                     <h1>{movie.title}</h1>
                     <p><strong>Año:</strong> {movie.year}</p>

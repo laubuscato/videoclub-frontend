@@ -41,7 +41,7 @@ function Login() {
 
         try {
             const data = await login(email, password)
-            // guarda el token en localStorage
+            // guarda el token JWT en localStorage para autenticar futuras peticiones
             localStorage.setItem("token", data.token)
             navigate("/")
         } catch {
@@ -75,9 +75,7 @@ function Login() {
                         required
                         className={errors.email ? "input-error" : ""}
                     />
-                    {errors.email && (
-                        <p className="error-text">{errors.email}</p>
-                    )}
+                    {errors.email && <p className="error-text">{errors.email}</p>}
 
                     {/* campo contraseña */}
                     <input
@@ -88,25 +86,17 @@ function Login() {
                         required
                         className={errors.password ? "input-error" : ""}
                     />
-                    {errors.password && (
-                        <p className="error-text">{errors.password}</p>
-                    )}
+                    {errors.password && <p className="error-text">{errors.password}</p>}
 
-                    {/* error general de credenciales */}
-                    {errors.general && (
-                        <p className="error-text">{errors.general}</p>
-                    )}
+                    {/* error general si las credenciales son incorrectas */}
+                    {errors.general && <p className="error-text">{errors.general}</p>}
 
-                    <button type="submit">
-                        Continuar
-                    </button>
+                    <button type="submit">Continuar</button>
 
-                    {/* enlace al registro */}
+                    {/* enlace a la página de registro */}
                     <p className="register-text">
                         ¿No tienes una cuenta?{" "}
-                        <Link to="/register" className="register-link">
-                            Regístrate
-                        </Link>
+                        <Link to="/register" className="register-link">Regístrate</Link>
                     </p>
 
                 </form>

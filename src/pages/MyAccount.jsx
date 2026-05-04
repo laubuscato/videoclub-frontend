@@ -4,8 +4,10 @@ import { FiArrowLeft, FiEdit2, FiCheck, FiX } from "react-icons/fi"
 import { getMe, getCart } from "../services/api"
 import "./myAccount.css"
 
+// URL base de la API
 const API_URL = "http://localhost:4000/api"
 
+// actualiza los datos personales del usuario via PATCH /user/me
 async function updateUser({ firstName, lastName, phone, address }) {
     const token = localStorage.getItem("token")
     const res = await fetch(`${API_URL}/user/me`, {
@@ -18,7 +20,7 @@ async function updateUser({ firstName, lastName, phone, address }) {
     return data
 }
 
-
+// calcula la fecha de devolución sumando los días al rentedAt
 function calcReturnDate(rentedAt, dias) {
     if (!rentedAt || !dias) return null
     const date = new Date(rentedAt)
@@ -26,15 +28,18 @@ function calcReturnDate(rentedAt, dias) {
     return date.toLocaleDateString()
 }
 
+// componente reutilizable para campos editables inline
 function EditableField({ label, value, onSave }) {
     const [editing, setEditing] = useState(false)
     const [tempValue, setTempValue] = useState(value)
 
+    // guarda el nuevo valor y cierra el modo edición
     const handleSave = async () => {
         await onSave(tempValue)
         setEditing(false)
     }
 
+    // descarta los cambios y cierra el modo edición
     const handleCancel = () => {
         setTempValue(value)
         setEditing(false)
@@ -68,11 +73,16 @@ function EditableField({ label, value, onSave }) {
 
 function MyAccount() {
     const navigate = useNavigate()
+
+    // datos del usuario logueado
     const [user, setUser] = useState(null)
+    // historial completo de alquileres
     const [rentals, setRentals] = useState([])
     const [loading, setLoading] = useState(true)
+    // notificación temporal
     const [toast, setToast] = useState({ show: false, message: "", type: "success" })
 
+    // carga el usuario y su historial al montar el componente
     useEffect(() => {
         const load = async () => {
             try {
@@ -89,11 +99,13 @@ function MyAccount() {
         load()
     }, [])
 
+    // muestra un toast de notificación y lo oculta tras 2.5s
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type })
         setTimeout(() => setToast({ show: false, message: "", type: "success" }), 2500)
     }
 
+    // actualiza un campo del usuario en el backend y en el estado local
     const handleUpdate = async (field, value) => {
         try {
             await updateUser({ ...user, [field]: value })
@@ -104,9 +116,11 @@ function MyAccount() {
         }
     }
 
+    // separa alquileres activos y devueltos
     const active = rentals.filter(r => r.returnedAt === null)
     const returned = rentals.filter(r => r.returnedAt !== null)
 
+    // muestra solo los últimos 4 dígitos de la tarjeta
     const maskedCard = user?.cardNumber
         ? "**** **** **** " + String(user.cardNumber).slice(-4)
         : "**** **** **** ****"
@@ -123,6 +137,7 @@ function MyAccount() {
         <div className="account-container">
             <div className="account-box">
 
+                {/* botón volver al home */}
                 <div className="back-button" onClick={() => navigate("/")}>
                     <FiArrowLeft />
                 </div>
@@ -130,7 +145,7 @@ function MyAccount() {
                 <h1 className="account-title">Mi Cuenta</h1>
                 {user && <p className="account-subtitle">Hola, {user.firstName}</p>}
 
-                {/* datos personales */}
+                {/* datos personales editables */}
                 <div className="account-section">
                     <h2 className="account-section-title">Datos personales</h2>
                     <div className="account-fields">
@@ -139,7 +154,7 @@ function MyAccount() {
                         <EditableField label="Teléfono" value={user?.phone || ""} onSave={(v) => handleUpdate("phone", v)} />
                         <EditableField label="Dirección" value={user?.address || ""} onSave={(v) => handleUpdate("address", v)} />
 
-                        {/* campos no editables */}
+                        {/* email y DNI son de solo lectura */}
                         <div className="account-field">
                             <span className="account-field-label">Email</span>
                             <div className="account-field-value readonly">
@@ -155,7 +170,7 @@ function MyAccount() {
                     </div>
                 </div>
 
-                {/* datos bancarios */}
+                {/* datos bancarios: tarjeta enmascarada */}
                 <div className="account-section">
                     <h2 className="account-section-title">Datos bancarios</h2>
                     <div className="account-fields">
@@ -168,7 +183,7 @@ function MyAccount() {
                     </div>
                 </div>
 
-                {/* historial de alquileres */}
+                {/* historial de alquileres separado en activos y devueltos */}
                 <div className="account-section">
                     <h2 className="account-section-title">Historial de alquileres</h2>
 
@@ -185,6 +200,7 @@ function MyAccount() {
                                         <div className="account-rental-info">
                                             <p className="account-rental-title">{r.movieTitle}</p>
                                             <p className="account-rental-date">Alquilada el {new Date(r.rentedAt).toLocaleDateString()}</p>
+                                            {/* fecha de devolución calculada: rentedAt + dias */}
                                             {r.dias && <p className="account-rental-date">Devolución el {calcReturnDate(r.rentedAt, r.dias)}</p>}
                                         </div>
                                         <span className="account-rental-badge active">Activa</span>
@@ -217,6 +233,7 @@ function MyAccount() {
 
             </div>
 
+            {/* toast de notificación */}
             {toast.show && (
                 <div className={`account-toast ${toast.type}`}>{toast.message}</div>
             )}
