@@ -30,6 +30,26 @@ const posters = Object.fromEntries(
     moviesData.map(movie => [movie.title.toLowerCase(), movie.posterUrl])
 );
 
+// décadas disponibles para el filtro
+const decades = [
+    { label: "Años 2020", value: "2020" },
+    { label: "Años 2010", value: "2010" },
+    { label: "Años 2000", value: "2000" },
+    { label: "Años 90", value: "1990" },
+    { label: "Años 80", value: "1980" },
+    { label: "Años 70", value: "1970" },
+    { label: "Años 60", value: "1960" },
+    { label: "Antes de 1960", value: "pre1960" },
+];
+
+// opciones de ordenación
+const sortOptions = [
+    { label: "A → Z", value: "az" },
+    { label: "Z → A", value: "za" },
+    { label: "Más nuevas", value: "newest" },
+    { label: "Más antiguas", value: "oldest" },
+];
+
 function Home() {
     const navigate = useNavigate();
 
@@ -55,15 +75,12 @@ function Home() {
     const [heroMovie, setHeroMovie] = useState(null);
 
     // valores de los filtros del sidebar
-    const [year, setYear] = useState("");
+    const [decade, setDecade] = useState("");
     const [genre, setGenre] = useState("");
     const [director, setDirector] = useState("");
     const [actores, setActores] = useState("");
     const [duracion, setDuracion] = useState("");
-
-    // genera los últimos 100 años para el selector de año
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+    const [sortBy, setSortBy] = useState("");
 
     const genres = [
         "Acción", "Comedia", "Drama", "Terror", "Ciencia ficción",
@@ -130,7 +147,7 @@ function Home() {
         return () => window.removeEventListener("cartUpdated", updateCart);
     }, [userId]);
 
-    // aplica todos los filtros activos de forma reactiva
+    // aplica todos los filtros y la ordenación de forma reactiva
     const movies = useMemo(() => {
         // enriquece cada película con datos locales si el backend no los tiene
         let filtered = allMovies.map(movie => {
@@ -150,7 +167,16 @@ function Home() {
                 m.movieTitle.toLowerCase().includes(searchTerm.toLowerCase())
             )
         }
-        if (year) filtered = filtered.filter(m => String(m.year) === year)
+
+        // filtro por década
+        if (decade) {
+            if (decade === "pre1960") {
+                filtered = filtered.filter(m => m.year && parseInt(m.year) < 1960)
+            } else {
+                const decadeStart = parseInt(decade)
+                filtered = filtered.filter(m => m.year && parseInt(m.year) >= decadeStart && parseInt(m.year) < decadeStart + 10)
+            }
+        }
 
         // filtro por género: busca en español y en inglés usando el mapa de traducciones
         if (genre) {
@@ -170,16 +196,22 @@ function Home() {
         else if (duracion === "medium") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) >= 90 && parseInt(m.duracion) <= 120)
         else if (duracion === "long") filtered = filtered.filter(m => m.duracion && parseInt(m.duracion) > 120)
 
+        // ordenación
+        if (sortBy === "az") filtered = [...filtered].sort((a, b) => a.movieTitle.localeCompare(b.movieTitle))
+        else if (sortBy === "za") filtered = [...filtered].sort((a, b) => b.movieTitle.localeCompare(a.movieTitle))
+        else if (sortBy === "newest") filtered = [...filtered].sort((a, b) => (b.year || 0) - (a.year || 0))
+        else if (sortBy === "oldest") filtered = [...filtered].sort((a, b) => (a.year || 0) - (b.year || 0))
+
         return filtered
-    }, [searchTerm, year, genre, director, actores, duracion, allMovies])
+    }, [searchTerm, decade, genre, director, actores, duracion, sortBy, allMovies])
 
     // resetea todos los filtros y el buscador
     const resetFilters = () => {
-        setYear(""); setGenre(""); setDirector(""); setActores(""); setDuracion(""); setSearchTerm("")
+        setDecade(""); setGenre(""); setDirector(""); setActores(""); setDuracion(""); setSearchTerm(""); setSortBy("")
     }
 
     // true si hay algún filtro activo
-    const hasActiveFilters = year || genre || director || actores || duracion || searchTerm
+    const hasActiveFilters = decade || genre || director || actores || duracion || searchTerm || sortBy
 
     // añade una película al carrito en localStorage
     const addToCart = (movie) => {
@@ -232,23 +264,31 @@ function Home() {
                         )}
                     </div>
 
+                    {/* ordenación */}
+                    <label className="filter-label">Ordenar</label>
+                    <select className="filter-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="">Por defecto</option>
+                        {sortOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+
                     <label className="filter-label">Género</label>
                     <select className="filter-select" value={genre} onChange={(e) => setGenre(e.target.value)}>
                         <option value="">Todos</option>
                         {genres.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
 
-                    <label className="filter-label">Año</label>
-                    <select className="filter-select" value={year} onChange={(e) => setYear(e.target.value)}>
-                        <option value="">Todos</option>
-                        {years.map(y => <option key={y} value={y}>{y}</option>)}
+                    {/* filtro por década en lugar de año exacto */}
+                    <label className="filter-label">Década</label>
+                    <select className="filter-select" value={decade} onChange={(e) => setDecade(e.target.value)}>
+                        <option value="">Todas</option>
+                        {decades.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
                     </select>
 
                     <label className="filter-label">Director</label>
-                    <input className="filter-input" placeholder="Ej: Nolan" value={director} onChange={(e) => setDirector(e.target.value)} />
+                    <input className="filter-input" placeholder="Ej: Tim Burton" value={director} onChange={(e) => setDirector(e.target.value)} />
 
                     <label className="filter-label">Actores</label>
-                    <input className="filter-input" placeholder="Ej: DiCaprio" value={actores} onChange={(e) => setActores(e.target.value)} />
+                    <input className="filter-input" placeholder="Ej: Brad Pitt" value={actores} onChange={(e) => setActores(e.target.value)} />
 
                     <label className="filter-label">Duración</label>
                     <select className="filter-select" value={duracion} onChange={(e) => setDuracion(e.target.value)}>
@@ -356,7 +396,7 @@ function Home() {
                     </div>
                 </main>
 
-                <Footer></Footer>
+                <Footer />
             </div>
 
             {/* modal de detalle de película */}
